@@ -620,7 +620,7 @@ class Ui_Dialog(object):
 
 
 if __name__ == '__main__':
-#test
+#testeeee
     if platform.system() == 'Darwin':
         try:
            os.setuid(0)
