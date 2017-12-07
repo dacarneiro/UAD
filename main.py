@@ -57,7 +57,6 @@ def backupToZip(folder,type):
         logger.info('Creating Zip: ' + zipFilename)
 
 
-
         shutil.make_archive(zipFilename1, 'zip', folder)
         if os.path.exists(zipFilename):
             logger.info('Done')
@@ -621,7 +620,7 @@ class Ui_Dialog(object):
 
 
 if __name__ == '__main__':
-
+#teste123
     if platform.system() == 'Darwin':
         try:
            os.setuid(0)
