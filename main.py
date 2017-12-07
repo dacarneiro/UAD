@@ -621,19 +621,19 @@ class Ui_Dialog(object):
 
 if __name__ == '__main__':
 
-    if platform.system() == 'Darwin':
-        try:
-           os.setuid(0)
-        except OSError:
-           #os.setuid(0)
-           dir_path = os.path.dirname(os.path.realpath(__file__))
-           #dir_path = '/' + dir_path
-           print(dir_path)
+#    if platform.system() == 'Darwin':
+#        try:
+#           os.setuid(0)
+#        except OSError:
+#           #os.setuid(0)
+#           dir_path = os.path.dirname(os.path.realpath(__file__))
+#           #dir_path = '/' + dir_path
+#           print(dir_path)
 
-           applescript = ('do shell script "~/Desktop/main.app/Contents/MacOS/main "' 'with administrator privileges')
-           #applescript = ('do shell script "pwd > /Users/virtualmachine/Downloads/UAD/teste.txt"')
-           exit_code = subprocess.Popen(['osascript','-e',applescript])
-           sys.exit(exit_code)
+#           applescript = ('do shell script "~/Desktop/main.app/Contents/MacOS/main "' 'with administrator privileges')
+#           #applescript = ('do shell script "pwd > /Users/virtualmachine/Downloads/UAD/teste.txt"')
+#           exit_code = subprocess.Popen(['osascript','-e',applescript])
+#           sys.exit(exit_code)
 
 
         app = QtWidgets.QApplication(sys.argv)
