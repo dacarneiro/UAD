@@ -499,7 +499,7 @@ class Ui_Dialog(object):
         font.setBold(True)
         font.setWeight(75)
         self.label_5.setFont(font)
-        self.label_5.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_5.setStyleSheet("color: rgb(128, 128, 128);")
         self.label_5.setObjectName("label_4")
 
         self.pushButton = QtWidgets.QPushButton(Dialog)
