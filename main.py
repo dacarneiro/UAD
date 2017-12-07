@@ -383,9 +383,9 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         label = QLabel(Dialog)
 
-        Dialog.resize(740, 440)
-        Dialog.setMinimumSize(QtCore.QSize(740, 470))
-        Dialog.setMaximumSize(QtCore.QSize(740, 470))
+        Dialog.resize(750, 440)
+        Dialog.setMinimumSize(QtCore.QSize(750, 440))
+        Dialog.setMaximumSize(QtCore.QSize(750, 440))
         Dialog.setAutoFillBackground(False)
         #Dialog.setStyleSheet("border-image:url(./uad.jpg);\n""")
         self.cb = QtWidgets.QComboBox()
