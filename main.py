@@ -395,7 +395,7 @@ class Ui_Dialog(object):
         self.cb.addItems(["Java", "C#", "Python"])
         #self.cb.currentIndexChanged.connect(self.selectionchange)
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
-        self.tabWidget.setGeometry(QtCore.QRect(0, 60, 741, 311))
+        self.tabWidget.setGeometry(QtCore.QRect(0, 60, 741, 321))
         self.tabWidget.setSizeIncrement(QtCore.QSize(0, 0))
         self.tabWidget.setBaseSize(QtCore.QSize(0, 0))
         self.tabWidget.setAutoFillBackground(False)
