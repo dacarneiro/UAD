@@ -383,7 +383,7 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         label = QLabel(Dialog)
 
-        Dialog.resize(740, 440)
+        Dialog.resize(761, 440)
         Dialog.setMinimumSize(QtCore.QSize(740, 470))
         Dialog.setMaximumSize(QtCore.QSize(740, 470))
         Dialog.setAutoFillBackground(False)
@@ -395,7 +395,7 @@ class Ui_Dialog(object):
         self.cb.addItems(["Java", "C#", "Python"])
         #self.cb.currentIndexChanged.connect(self.selectionchange)
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
-        self.tabWidget.setGeometry(QtCore.QRect(0, 60, 741, 311))
+        self.tabWidget.setGeometry(QtCore.QRect(5, 60, 751, 311))
         self.tabWidget.setSizeIncrement(QtCore.QSize(0, 0))
         self.tabWidget.setBaseSize(QtCore.QSize(0, 0))
         self.tabWidget.setAutoFillBackground(False)
@@ -450,7 +450,7 @@ class Ui_Dialog(object):
 
 
         self.tableWidget = QtWidgets.QTableWidget(self.tab)
-        self.tableWidget.setGeometry(QtCore.QRect(0, 0, 741, 291))
+        self.tableWidget.setGeometry(QtCore.QRect(0, 0, 751, 291))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(2)
         self.tableWidget.setRowCount(0)
@@ -461,7 +461,7 @@ class Ui_Dialog(object):
         self.tabWidget.addTab(self.tab_2, "")
 
         self.tableWidget_hide = QtWidgets.QTableWidget(self.tab_2)
-        self.tableWidget_hide.setGeometry(QtCore.QRect(0, 0, 741, 291))
+        self.tableWidget_hide.setGeometry(QtCore.QRect(0, 0, 751, 291))
         self.tableWidget_hide.setObjectName("tableWidget1")
         self.tableWidget_hide.setColumnCount(2)
         self.tableWidget_hide.setRowCount(0)
