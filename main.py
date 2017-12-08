@@ -383,9 +383,9 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         label = QLabel(Dialog)
 
-        Dialog.resize(761, 470)
-        Dialog.setMinimumSize(QtCore.QSize(761, 470))
-        Dialog.setMaximumSize(QtCore.QSize(761, 470))
+        Dialog.resize(767, 470)
+        Dialog.setMinimumSize(QtCore.QSize(767, 470))
+        Dialog.setMaximumSize(QtCore.QSize(767, 470))
         Dialog.setAutoFillBackground(False)
         #Dialog.setStyleSheet("border-image:url(./uad.jpg);\n""")
         self.cb = QtWidgets.QComboBox()
@@ -395,7 +395,7 @@ class Ui_Dialog(object):
         self.cb.addItems(["Java", "C#", "Python"])
         #self.cb.currentIndexChanged.connect(self.selectionchange)
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
-        self.tabWidget.setGeometry(QtCore.QRect(5, 60, 751, 311))
+        self.tabWidget.setGeometry(QtCore.QRect(5, 60, 761, 311))
         self.tabWidget.setSizeIncrement(QtCore.QSize(0, 0))
         self.tabWidget.setBaseSize(QtCore.QSize(0, 0))
         self.tabWidget.setAutoFillBackground(False)
@@ -493,7 +493,7 @@ class Ui_Dialog(object):
         self.label_3.setObjectName("label_3")
 
         self.label_5 = QtWidgets.QLabel(Dialog)
-        self.label_5.setGeometry(QtCore.QRect(535, 435, 600, 16))
+        self.label_5.setGeometry(QtCore.QRect(560, 440, 600, 16))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -621,14 +621,14 @@ class Ui_Dialog(object):
 
 if __name__ == '__main__':
 
-    if platform.system() == 'Darwin':
-        try:
-           os.setuid(0)
-        except OSError:
-           dir_path = os.path.dirname(os.path.realpath(__file__))
-           applescript = ('do shell script "~/Desktop/main.app/Contents/MacOS/main "' 'with administrator privileges')
-           exit_code = subprocess.Popen(['osascript','-e',applescript])
-           sys.exit(exit_code)
+#    if platform.system() == 'Darwin':
+#        try:
+#           os.setuid(0)
+#        except OSError:
+#           dir_path = os.path.dirname(os.path.realpath(__file__))
+#           applescript = ('do shell script "~/Desktop/main.app/Contents/MacOS/main "' 'with administrator privileges')
+#           exit_code = subprocess.Popen(['osascript','-e',applescript])
+#           sys.exit(exit_code)
 
 
         app = QtWidgets.QApplication(sys.argv)
