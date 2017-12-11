@@ -27,10 +27,19 @@ import sys
 import logging
 
 
+#def resource_path(relative_path):
+#     if hasattr(sys, '_MEIPASS'):
+#         return os.path.join(sys._MEIPASS, relative_path)
+#     return os.path.join(os.path.abspath("."), relative_path)
+
 def resource_path(relative_path):
-     if hasattr(sys, '_MEIPASS'):
-         return os.path.join(sys._MEIPASS, relative_path)
-     return os.path.join(os.path.abspath("."), relative_path)
+#""" Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+
+
+
 
 
 def backupToZip(folder,type):
@@ -232,7 +241,7 @@ def Hide(self,type):
                         #print(sourcefile)
                         #print(destfile)
                         shutil.move(sourcefile,destfile)
-                        logger.info('Hided:  ' + curItem.text())
+                        #logger.info('Hided:  ' + curItem.text())
 
     if (self.tabWidget.currentIndex() == 0 and type == "PT"):
             logger.info('--Hided ProTools Plugins--')
@@ -255,7 +264,7 @@ def Hide(self,type):
                             # print(sourcefile)
                             # print(destfile)
                             shutil.move(sourcefile, destfile)
-                            logger.info('Hided:  ' + curItem.text())
+                            #logger.info('Hided:  ' + curItem.text())
 
 
 
@@ -279,7 +288,7 @@ def Hide(self,type):
                             #print(sourcefile)
                             #print(destfile)
                             shutil.move(destfile,sourcefile)
-                            logger.info('Showed:  ' + curItem.text())
+                            #logger.info('Showed:  ' + curItem.text())
 
     if (self.tabWidget.currentIndex() == 1 and type == "Logic"):
         root_backup = "/Library/Audio/Plug-Ins/Unused/Components"
@@ -300,7 +309,7 @@ def Hide(self,type):
                         # print(sourcefile)
                         # print(destfile)
                         shutil.move(destfile, sourcefile)
-                        logger.info('Showed:  ' + curItem.text())
+                        #logger.info('Showed:  ' + curItem.text())
 
     #print(self.tabWidget.currentIndex())
     popula_tab(self,type)
@@ -321,7 +330,7 @@ def popula_tab(self,type):
         for root, dirs, files in os.walk(path_type):
             files.sort()
             plugins = files
-            logger.info(plugins)
+            #logger.info(plugins)
             #print(plugins)
         item1 = QtWidgets.QTableWidgetItem('Plugin')
         font = QtGui.QFont()
@@ -381,7 +390,8 @@ class Ui_Dialog(object):
 
 
         Dialog.setObjectName("Dialog")
-        label = QLabel(Dialog)
+
+
 
         Dialog.resize(767, 470)
         Dialog.setMinimumSize(QtCore.QSize(767, 470))
@@ -408,10 +418,17 @@ class Ui_Dialog(object):
         p = Dialog.palette()
         p.setColor(Dialog.backgroundRole(), QtCore.Qt.black)
         Dialog.setPalette(p)
-        #pixmap = QPixmap('uad.jpg')
-        #pixmap = QPixmap('UAD.jpg')
+
+
+        #pixmap = QPixmap(resource_path("uad.jpg"))
         #label.setPixmap(pixmap)
-        #Dialog.resize(pixmap.width(), pixmap.height())
+        self.label = QLabel(Dialog)
+        self.label.setGeometry(QtCore.QRect(25, 12, 100, 60))
+        self.label.setPixmap(QtGui.QPixmap(resource_path("uad.jpg")))
+
+        #logger.info(resource_path("uad.jpg"))
+        #print(resource_path("uad.jpg"))
+
         directory = "/Library/Audio/Plug-Ins/Unused/Components"
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -483,7 +500,7 @@ class Ui_Dialog(object):
 
 
         self.label_3 = QtWidgets.QLabel(Dialog)
-        self.label_3.setGeometry(QtCore.QRect(110, 10, 450, 41))
+        self.label_3.setGeometry(QtCore.QRect(135, 10, 450, 41))
         font = QtGui.QFont()
         font.setPointSize(34)
         font.setBold(True)
@@ -534,6 +551,9 @@ class Ui_Dialog(object):
 
 
 
+
+
+
         self.retranslateUi(Dialog)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -560,7 +580,7 @@ class Ui_Dialog(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog", "Currently Shown"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Currently Hidden"))
         self.label_3.setText(_translate("Dialog", "UAD HIDE/UNHIDE Plugins"))
-        self.pushButton.setText(_translate("Dialog", 'Backup all Plugin Folders "/Users"     (This can take a while)'))
+        self.pushButton.setText(_translate("Dialog", 'Backup alll Plugin Folders "/Users"     (This can take a while)'))
         self.pushButton1.setText(_translate("Dialog", "Apply"))
         self.label_4.setText(_translate("Dialog", " "))
         self.groupBox.setTitle(_translate("Dialog", "Plugin Type"))
@@ -568,6 +588,8 @@ class Ui_Dialog(object):
         self.radioButton.setText(_translate("Dialog", "ProTools - AAX"))
         self.radioButton_3.setText(_translate("Dialog", "Others - VST"))
         self.label_5.setText(_translate("Dialog", "Logs at /var/tmp/myapp.log"))
+
+
 
     #@pyqtSlot()
     def on_click(self):
@@ -621,15 +643,21 @@ class Ui_Dialog(object):
 
 if __name__ == '__main__':
 
-#    if platform.system() == 'Darwin':
-#        try:
-#           os.setuid(0)
-#        except OSError:
-#           dir_path = os.path.dirname(os.path.realpath(__file__))
-#           applescript = ('do shell script "~/Desktop/main.app/Contents/MacOS/main "' 'with administrator privileges')
-#           exit_code = subprocess.Popen(['osascript','-e',applescript])
-#           sys.exit(exit_code)
 
+    string = resource_path("main")
+
+
+    if platform.system() == 'Darwin':
+        try:
+           os.setuid(0)
+        except OSError:
+           dir_path = os.path.dirname(os.path.realpath(__file__))
+           applescript = ('do shell script "' + string + '" ' 'with administrator privileges')
+           print(applescript)
+           exit_code = subprocess.Popen(['osascript','-e',applescript])
+           sys.exit(exit_code)
+
+        print(resource_path("main"))
 
         app = QtWidgets.QApplication(sys.argv)
         Dialog = QtWidgets.QDialog()
