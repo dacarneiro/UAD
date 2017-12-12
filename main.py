@@ -791,3 +791,6 @@ if __name__ == '__main__':
     Dialog.show()
     sys.exit(app.exec_())
 
+#     build
+#     rm - rf. / build; rm - rf. / dist /; pyinstaller - -onedir - -windowed - -icon = HideSeek.icns main.py; cp uad.jpg / Users / virtualmachine / Downloads / UAD / dist / main.app / Contents / MacOS /; cp donate.jpg / Users / virtualmachine / Downloads / UAD / dist / main.app / Contents / MacOS /; mv. / dist / main.app /./ dist / Hide\ \ & \ Seek\ UAD\ Plugins.app /
+
