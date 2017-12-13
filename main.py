@@ -310,7 +310,7 @@ def Hide(self, type):
                         # print(sourcefile)
                         # print(destfile)
                         shutil.move(sourcefile, destfile)
-                        # logger.info('Hided:  ' + curItem.text())
+                        logger.info('Hided:  ' + sourcefile + " to " + destfile)
 
     if (self.tabWidget.currentIndex() == 0 and type == "PT"):
         logger.info('--Hided ProTools Plugins--')
@@ -333,7 +333,7 @@ def Hide(self, type):
                         # print(sourcefile)
                         # print(destfile)
                         shutil.move(sourcefile, destfile)
-                        # logger.info('Hided:  ' + curItem.text())
+                        logger.info('Hided:  ' + sourcefile + " to " + destfile)
 
     if (self.tabWidget.currentIndex() == 1 and type == "PT"):
 
@@ -355,7 +355,7 @@ def Hide(self, type):
                         # print(sourcefile)
                         # print(destfile)
                         shutil.move(destfile, sourcefile)
-                        # logger.info('Showed:  ' + curItem.text())
+                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
 
     if (self.tabWidget.currentIndex() == 1 and type == "Logic"):
         root_backup = "/Library/Audio/Plug-Ins/Unused/Components"
@@ -376,7 +376,7 @@ def Hide(self, type):
                         # print(sourcefile)
                         # print(destfile)
                         shutil.move(destfile, sourcefile)
-                        # logger.info('Showed:  ' + curItem.text())
+                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
 
 
     if (self.tabWidget.currentIndex() == 0 and type == "VST"):
@@ -402,7 +402,7 @@ def Hide(self, type):
                         # print(sourcefile)
                         # print(destfile)
                         shutil.move(sourcefile, destfile)
-                        # logger.info('Hided:  ' + curItem.text())
+                        logger.info('Hided:  ' + sourcefile + " to " + destfile)
                 for file in os.listdir(root_mono):
                     if fnmatch.fnmatch(file, curItem.text() + "(m).*"):
                         sourcefile = root_mono + "/" + str(file)
@@ -410,7 +410,7 @@ def Hide(self, type):
                         # print(sourcefile)
                         # print(destfile)
                         shutil.move(sourcefile, destfile)
-                        # logger.info('Hided:  ' + curItem.text())
+                        logger.info('Hided:  ' + sourcefile + " to " + destfile)
 
     if (self.tabWidget.currentIndex() == 1 and type == "VST"):
 
@@ -435,7 +435,7 @@ def Hide(self, type):
                         # print(sourcefile)
                         # print(destfile)
                         shutil.move(destfile, sourcefile)
-                        # logger.info('Showed:  ' + curItem.text())
+                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
                 for file in os.listdir(root_mono_backup):
                     if fnmatch.fnmatch(file, curItem.text() + "(m).*"):
                         sourcefile = root_mono + "/" + str(file)
@@ -443,7 +443,7 @@ def Hide(self, type):
                         #print(sourcefile)
                         #print(destfile)
                         shutil.move(destfile, sourcefile)
-                        # logger.info('Showed:  ' + curItem.text())
+                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
 
 
 
@@ -600,6 +600,17 @@ class Ui_Dialog(object):
         self.label_3.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_3.setObjectName("label_3")
 
+        self.label_7 = QtWidgets.QLabel(Dialog)
+        self.label_7.setGeometry(QtCore.QRect(530, 10, 450, 41))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(90)
+        self.label_7.setFont(font)
+        self.label_7.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_7.setObjectName("label_3")
+
+
 
         self.label_5 = QtWidgets.QLabel(Dialog)
         self.label_5.setGeometry(QtCore.QRect(560, 440, 600, 16))
@@ -657,7 +668,7 @@ class Ui_Dialog(object):
         self.pushButton6 = QtWidgets.QPushButton(Dialog)
         self.pushButton6.setGeometry(QtCore.QRect(10, 437, 120, 30))
         self.pushButton6.setObjectName("pushButton")
-        self.pushButton6.setToolTip('Apply')
+        self.pushButton6.setToolTip('Donate')
         self.pushButton6.clicked.connect(self.on_click_Donate)
         self.pushButton6.setText("")
         self.pushButton6.setIcon(QtGui.QIcon(resource_path("donate.jpg")))
@@ -691,7 +702,8 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Hide & Seek UAD Plugins"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog", "Currently Shown"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Currently Hidden"))
-        self.label_3.setText(_translate("Dialog", "  Hide & Seek UAD Plugins"))
+        self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
+        self.label_7.setText(_translate("Dialog", "V1.1"))
         self.pushButton.setText(_translate("Dialog", 'Backup alll Plugin Folders "/Users"     (This can take a while)'))
         self.pushButton1.setText(_translate("Dialog", "Apply"))
         self.label_4.setText(_translate("Dialog", " "))
@@ -748,9 +760,12 @@ class Ui_Dialog(object):
             if result:
                 if type == "Logic":
                     self.label_4.setText("Succeed! If need, in Logic, go to: Logic > Preferences > Plug-ins Manager > Reset & Rescan")
+                    logger.info("Succeed! If need, in Logic, go to: Logic > Preferences > Plug-ins Manager > Reset & Rescan")
                 if type == "PT":
-                    self.label_4.setText("Succeed! If need, Please rescan your plugins inside your ProTools")
+                    logger.info("Succeed! If need, Please rescan your plugins inside ProTools")
+                    self.label_4.setText("Succeed! If need, Please rescan your plugins inside ProTools")
                 if type == "VST":
+                    logger.info("Succeed! If need, Please rescan your plugins inside your DAW")
                     self.label_4.setText("Succeed! If need, Please rescan your plugins inside your DAW")
 
             if not result:
@@ -764,22 +779,22 @@ class Ui_Dialog(object):
 
 if __name__ == '__main__':
 
-
+    GUI = 0
     string = resource_path("main")
 
-
-    if platform.system() == 'Darwin':
-        try:
-           os.setuid(0)
-        except OSError:
-           dir_path = os.path.dirname(os.path.realpath(__file__))
-           string = string.replace(" ","\\\ ")
-           string = string.replace("&","\\\&")
-           applescript = ('do shell script "' + string + '" ' 'with administrator privileges')
-           print(applescript)
-           print(applescript)
-           exit_code = subprocess.Popen(['osascript','-e',applescript],stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-           sys.exit(exit_code)
+    if GUI != 1:
+        if platform.system() == 'Darwin':
+            try:
+               os.setuid(0)
+            except OSError:
+               dir_path = os.path.dirname(os.path.realpath(__file__))
+               string = string.replace(" ","\\\ ")
+               string = string.replace("&","\\\&")
+               applescript = ('do shell script "' + string + '" ' 'with administrator privileges')
+               print(applescript)
+               print(applescript)
+               exit_code = subprocess.Popen(['osascript','-e',applescript],stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               sys.exit(exit_code)
 
     #print(resource_path("main"))
 
