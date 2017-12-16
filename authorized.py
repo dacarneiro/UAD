@@ -1,35 +1,51 @@
 import csv
 import numpy as np
-#fname = open('UADSystemProfile.txt','r')
-#message = f.read()
-#print(message)
-#f.close()
+
+
+with open('final.csv', 'r') as f:
+    #reader = csv.reader(f)
+    reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+    all_plugins_list = list(reader)
+
+#print(all_plugins_list[2][0])
+
+
+
+with open('UADSystemProfile.txt' , 'r') as f:
+    reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+    array_my_plugins_temp = list(reader)
+
+
+counter = len(array_my_plugins_temp)
 save = 0
-count = -1
-with open("UADSystemProfile.txt", "r") as ins:
-    array = []
-    for line in ins:
 
-        if "Authorizations" in line:
-            save = 1
-        if save !=0 and line != "\n":
-            count = count+1
-            array.append(line)
+i = 0
+array_my_plugins = []
+while i < counter:
+    #print(array_my_plugins_temp[i])
+    if "\t\t\t UAD-2 Plug-in Authorizations \t\t\t" in array_my_plugins_temp[i]:
+        save = 1
+    if save == 1:
+        array_my_plugins.append(array_my_plugins_temp[i])
+    i = i + 1
 
-#print(array[143])
-#print(count)
+#print(array_my_plugins[2][1])
+#print(len(array_my_plugins))
 
-#array_match = []
-#f = open('final.csv', 'r')
-#reader = csv.reader(f)
-#for row in reader:
-#    print
-#    array_match.append(row)
-#f.close()
-#print(array_match[2])
+array_matched_plugins = []
+counter_my = len(array_my_plugins)
+counter_all = len(all_plugins_list)
+i = 2
+j=0
+while i < counter_my:
+    j = 0
+    while j < counter_all:
+        #print(array_my_plugins[i])
+        #print(all_plugins_list[j][0])
+        if (array_my_plugins[i][0] == all_plugins_list[j][0] and array_my_plugins[i][1] == " Authorized for all devices"):
+            array_matched_plugins.append(all_plugins_list[j])
+        j = j + 1
+    i = i + 1
 
-x=np.genfromtxt('final.csv',delimiter=';',dtype=None)
-
-Counts = x[:,2]
-print(x)
-
+print(array_matched_plugins)
+print(len(array_matched_plugins))
