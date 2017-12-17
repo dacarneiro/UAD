@@ -234,7 +234,7 @@ def by_imported_file(self,type):
 
     #print(array_matched_plugins)
 
-
+    print(type)
     self.tableWidget.setRowCount(0)
     path_type = "/Library/Audio/Plug-Ins/Components"
     extension = "\.component"
@@ -686,7 +686,7 @@ def UnHide_all(self, type):
 
 
     # print(self.tabWidget.currentIndex())
-    #self.tabWidget.currentIndex = 0
+    self.tabWidget.currentIndex = 0
     #popula_tab(self, type)
     #popula_hide_tab(self, type)
     #self.tabWidget.currentIndex = 0
@@ -826,16 +826,28 @@ class Ui_Dialog(object):
         by_imported_file(self,"Logic")
         by_imported_file(self,"VST")
         by_imported_file(self,"PT")
-        popula_tab(self, type)
-        popula_hide_tab(self,type)
+        popula_tab(self, "Logic")
+        popula_hide_tab(self,"Logic")
+        popula_tab(self, "PT")
+        popula_hide_tab(self,"PT")
+        popula_tab(self, "VST")
+        popula_hide_tab(self, "VST")
         UnHide_all(self, "Logic")
         UnHide_all(self, "VST")
         UnHide_all(self, "PT")
+        popula_tab(self, "Logic")
+        popula_hide_tab(self,"Logic")
         by_imported_file(self,"Logic")
-        by_imported_file(self,"VST")
+        popula_tab(self, "PT")
+        popula_hide_tab(self,"PT")
         by_imported_file(self,"PT")
-        popula_tab(self, type)
-        popula_hide_tab(self,type)
+        popula_tab(self, "VST")
+        popula_hide_tab(self, "VST")
+        by_imported_file(self,"VST")
+
+
+
+
 
 
 
@@ -988,18 +1000,21 @@ class Ui_Dialog(object):
         type = "VST"
         popula_tab(self,type)
         popula_hide_tab(self,type)
+        by_imported_file(self, type)
 
     def radio_PT_click(self):
         logger.info('ProTools Plugin Type Selected')
         type = "PT"
         popula_tab(self,type)
         popula_hide_tab(self,type)
+        by_imported_file(self, type)
 
     def radio_LOGIC_click(self):
         logger.info('AU(Logic) Plugin Type Selected')
         type = "LOGIC"
         popula_tab(self,type)
         popula_hide_tab(self,type)
+        by_imported_file(self, type)
 
     def on_click_Apply(self):
             if self.radioButton.isChecked():
