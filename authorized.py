@@ -42,7 +42,7 @@ while i < counter_my:
     while j < counter_all:
         #print(array_my_plugins[i])
         #print(all_plugins_list[j][0])
-        if (array_my_plugins[i][0] == all_plugins_list[j][0] and array_my_plugins[i][1] == " Authorized for all devices"):
+        if (array_my_plugins[i][0] == all_plugins_list[j][0] and array_my_plugins[i][1] != " Demo not started"):
             array_matched_plugins.append(all_plugins_list[j])
         j = j + 1
     i = i + 1

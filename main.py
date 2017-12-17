@@ -11,8 +11,10 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush
 import zipfile, os
+import csv
 import shutil
 import fnmatch
+import time
 import re
 import glob
 from random import randrange
@@ -27,19 +29,10 @@ import sys
 import logging
 
 
-#def resource_path(relative_path):
-#     if hasattr(sys, '_MEIPASS'):
-#         return os.path.join(sys._MEIPASS, relative_path)
-#     return os.path.join(os.path.abspath("."), relative_path)
-
 def resource_path(relative_path):
 #""" Get absolute path to resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
-
-
-
-
 
 def backupToZip(folder,type):
     # Backup the entire contents of "folder" into a ZIP file.
@@ -158,7 +151,154 @@ def backupToZip(folder,type):
 
     return 1
 
+def setcombo(self,combo_box_options,array_matched_plugins,currentfile):
+    combo_box_options = ["Hidden", "Shown"]
+    #print(array_matched_plugins)
 
+    counter_my = len(array_matched_plugins)
+
+    i = 0
+    j = 1
+    #print(counter_my)
+    #print(currentfile)
+    #time.sleep(3)
+    while i < counter_my:
+        j = 1
+
+        #print(array_matched_plugins[i][1])
+        #print(currentfile)
+        while j < 4:
+            if (array_matched_plugins[i][j] == currentfile):
+                combo_box_options = ["Shown", "Hidden"]
+                #print("matcheeeeee")
+                # print(array_my_plugins[i])
+                # print(all_plugins_list[j][0])
+                #if (array_my_plugins[i][0] == all_plugins_list[j][0] and array_my_plugins[i][1] != " Demo not started"):
+                #    array_matched_plugins.append(all_plugins_list[j])
+            j = j + 1
+            #print(i)
+            #print(array_matched_plugins[i][j])
+
+        i = i + 1
+
+
+
+
+
+
+
+    return combo_box_options
+
+def by_imported_file(self,type):
+    with open('/Users/carneiro/Downloads/UAD/final.csv', 'r') as f:
+        # reader = csv.reader(f)
+        reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+        all_plugins_list = list(reader)
+
+    # print(all_plugins_list[2][0])
+
+    with open('/Users/carneiro/Downloads/UAD/UADSystemProfile.txt', 'r') as f:
+        reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+        array_my_plugins_temp = list(reader)
+
+    counter = len(array_my_plugins_temp)
+    save = 0
+
+    i = 0
+    array_my_plugins = []
+    while i < counter:
+        # print(array_my_plugins_temp[i])
+        if "\t\t\t UAD-2 Plug-in Authorizations \t\t\t" in array_my_plugins_temp[i]:
+            save = 1
+        if save == 1:
+            array_my_plugins.append(array_my_plugins_temp[i])
+        i = i + 1
+
+    # print(array_my_plugins[2][1])
+    # print(len(array_my_plugins))
+
+    array_matched_plugins = []
+    counter_my = len(array_my_plugins)
+    counter_all = len(all_plugins_list)
+    i = 2
+    j = 0
+    while i < counter_my:
+        j = 0
+        while j < counter_all:
+            # print(array_my_plugins[i])
+            # print(all_plugins_list[j][0])
+            if (array_my_plugins[i][0] == all_plugins_list[j][0] and array_my_plugins[i][1] != " Demo not started"):
+                array_matched_plugins.append(all_plugins_list[j])
+            j = j + 1
+        i = i + 1
+
+    #print(array_matched_plugins)
+
+
+    self.tableWidget.setRowCount(0)
+    path_type = "/Library/Audio/Plug-Ins/Components"
+    extension = "\.component"
+    if type == "PT":
+        path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
+        extension = "\.aaxplugin"
+
+    if type == "VST":
+        path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+        extension = "\.vst"
+
+    #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
+    #        self.tableWidget.move(30, 30)
+    #        self.tableWidget.resize(400, 300)
+    for root, dirs, files in os.walk(path_type):
+        files.sort()
+        plugins = files
+        # logger.info(plugins)
+        # print(plugins)
+    item1 = QtWidgets.QTableWidgetItem('Plugin')
+    font = QtGui.QFont()
+    font.setPointSize(15)
+    font.setFamily("Times New Roman")
+    item1.setFont(font)
+    # item1.setBackground(QtGui.QColor(255, 0, 0))
+    self.tableWidget.setHorizontalHeaderItem(0, item1)
+    self.tableWidget.setColumnWidth(0, 600)
+    item2 = QtWidgets.QTableWidgetItem('Status')
+    font = QtGui.QFont()
+    font.setPointSize(15)
+    font.setFamily("Times New Roman")
+    item2.setFont(font)
+    # item2.setBackground(QtGui.QColor(0, 255, 0))
+    self.tableWidget.setHorizontalHeaderItem(1, item2)
+
+    combo_box_options = ["Shown", "Hidden"]
+
+    root = path_type
+    listplugin = ""
+    temp1 = 0
+    index = 0
+    pattern = '*.txt'
+    path = '.'
+    os.chdir(path_type)
+    print(path_type)
+    print(root)
+    for i in sorted(glob.glob('UAD*')):
+        # print(i)
+        temp1 = temp1 + 1
+        if (os.path.join(root, i)):
+            # print(i)
+            i = re.sub(extension, '', i)
+            combo = QtWidgets.QComboBox();
+            self.tableWidget.insertRow(self.tableWidget.rowCount())
+            item = QtWidgets.QTableWidgetItem('UAD')
+            item.setText(i)
+            self.tableWidget.setItem(temp1 - 1, 0, item)
+            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+            for t in combo_box_options:
+                #print(i)
+                combo.addItem(t)
+
+            self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
+    logger.info('Shown tab Populed')
 
 
 def popula_hide_tab(self,type):
@@ -220,6 +360,7 @@ def popula_hide_tab(self,type):
             self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
     logger.info('Hidden tab Populed')
 
+    #print(self.tableWidget_hide.rowCount())
 
 def popula_tab(self,type):
         self.tableWidget.setRowCount(0)
@@ -285,11 +426,12 @@ def popula_tab(self,type):
                 self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
         logger.info('Shown tab Populed')
 
-
 def Hide(self, type):
     # Move the Hided to Unsused folder.
-
-    if (self.tabWidget.currentIndex() == 0 and type == "Logic"):
+    print(self.tabWidget.currentIndex)
+    print(self.tabWidget.currentIndex)
+    print(self.tabWidget.currentIndex)
+    if (self.tabWidget.currentIndex == 0 and type == "Logic"):
         logger.info('--Hided AU Plugins--')
         root = "/Library/Audio/Plug-Ins/Components"
         root_backup = "/Library/Audio/Plug-Ins/Unused/Components"
@@ -312,7 +454,7 @@ def Hide(self, type):
                         shutil.move(sourcefile, destfile)
                         logger.info('Hided:  ' + sourcefile + " to " + destfile)
 
-    if (self.tabWidget.currentIndex() == 0 and type == "PT"):
+    if (self.tabWidget.currentIndex == 0 and type == "PT"):
         logger.info('--Hided ProTools Plugins--')
         root = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
         root_backup = "/Library/Application Support/Avid/Audio/Unused/"
@@ -335,7 +477,7 @@ def Hide(self, type):
                         shutil.move(sourcefile, destfile)
                         logger.info('Hided:  ' + sourcefile + " to " + destfile)
 
-    if (self.tabWidget.currentIndex() == 1 and type == "PT"):
+    if (self.tabWidget.currentIndex == 1 and type == "PT"):
 
         root_backup = "/Library/Application Support/Avid/Audio/Unused/"
         root = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
@@ -357,7 +499,7 @@ def Hide(self, type):
                         shutil.move(destfile, sourcefile)
                         logger.info('Showed:  ' + destfile + " to " + sourcefile)
 
-    if (self.tabWidget.currentIndex() == 1 and type == "Logic"):
+    if (self.tabWidget.currentIndex == 1 and type == "Logic"):
         root_backup = "/Library/Audio/Plug-Ins/Unused/Components"
         root = "/Library/Audio/Plug-Ins/Components"
         logger.info('--Showed AU Plugins--')
@@ -379,7 +521,7 @@ def Hide(self, type):
                         logger.info('Showed:  ' + destfile + " to " + sourcefile)
 
 
-    if (self.tabWidget.currentIndex() == 0 and type == "VST"):
+    if (self.tabWidget.currentIndex == 0 and type == "VST"):
         logger.info('--Hided VST Plugins--')
         root = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
         root_backup = "/Library/Audio/Plug-Ins/Unused/VST"
@@ -412,7 +554,7 @@ def Hide(self, type):
                         shutil.move(sourcefile, destfile)
                         logger.info('Hided:  ' + sourcefile + " to " + destfile)
 
-    if (self.tabWidget.currentIndex() == 1 and type == "VST"):
+    if (self.tabWidget.currentIndex == 1 and type == "VST"):
 
         root_backup = "/Library/Audio/Plug-Ins/Unused/VST"
         root = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
@@ -452,6 +594,103 @@ def Hide(self, type):
     popula_hide_tab(self, type)
     return 1
 
+def UnHide_all(self, type):
+    # Move the Hided to Unsused folder.
+    #popula_hide_tab(self,"PT")
+    #popula_hide_tab(self, "Logic")
+    #popula_hide_tab(self, "VST")
+    self.tabWidget.currentIndex = 1
+    #print(self.tableWidget_hide.rowCount())
+
+    if (type == "PT"):
+
+        root_backup = "/Library/Application Support/Avid/Audio/Unused/"
+        root = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
+        logger.info('--Showed AU Plugins--')
+        for i in range(0, self.tableWidget_hide.rowCount()):
+            combo = self.tableWidget_hide.cellWidget(i, 1)
+
+            if (combo.currentText() != "All"):
+                self.tableWidget_hide.setCurrentCell(i, 0)
+                curItem = self.tableWidget_hide.currentItem()
+                # print(curItem.text())
+                caminho = root + '_' + "\\" + str(curItem.text())
+                # print(caminho)
+                for file in os.listdir(root_backup):
+                    if fnmatch.fnmatch(file, curItem.text() + ".*"):
+                        sourcefile = root + "/" + str(file)
+                        destfile = root_backup + "/" + str(file)
+                        # print(sourcefile)
+                        # print(destfile)
+                        shutil.move(destfile, sourcefile)
+                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
+
+    if (type == "Logic"):
+        root_backup = "/Library/Audio/Plug-Ins/Unused/Components"
+        root = "/Library/Audio/Plug-Ins/Components"
+        logger.info('--Showed AU Plugins--')
+        self.tabWidget.currentIndex = 1
+        #print(self.tableWidget_hide.rowCount())
+        for i in range(0, self.tableWidget_hide.rowCount()):
+
+            combo = self.tableWidget_hide.cellWidget(i, 1)
+            if (combo.currentText() != "All"):
+                self.tableWidget_hide.setCurrentCell(i, 0)
+                curItem = self.tableWidget_hide.currentItem()
+                # print(curItem.text())
+                caminho = root + '_' + "\\" + str(curItem.text())
+                # print(caminho)
+                for file in os.listdir(root_backup):
+                    if fnmatch.fnmatch(file, curItem.text() + ".*"):
+                        sourcefile = root + "/" + str(file)
+                        destfile = root_backup + "/" + str(file)
+                        # print(sourcefile)
+                        # print(destfile)
+                        shutil.move(destfile, sourcefile)
+                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
+
+
+    if (type == "VST"):
+
+        root_backup = "/Library/Audio/Plug-Ins/Unused/VST"
+        root = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+        root_mono_backup = "/Library/Audio/Plug-Ins/Unused/VST/Mono"
+        root_mono = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/Mono"
+
+        logger.info('--VST AU Plugins--')
+        for i in range(0, self.tableWidget_hide.rowCount()):
+            combo = self.tableWidget_hide.cellWidget(i, 1)
+            if (combo.currentText() != "All"):
+                self.tableWidget_hide.setCurrentCell(i, 0)
+                curItem = self.tableWidget_hide.currentItem()
+                # print(curItem.text())
+                caminho = root + '_' + "\\" + str(curItem.text())
+                # print(caminho)
+                for file in os.listdir(root_backup):
+                    if fnmatch.fnmatch(file, curItem.text() + ".*"):
+                        sourcefile = root + "/" + str(file)
+                        destfile = root_backup + "/" + str(file)
+                        # print(sourcefile)
+                        # print(destfile)
+                        shutil.move(destfile, sourcefile)
+                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
+                for file in os.listdir(root_mono_backup):
+                    if fnmatch.fnmatch(file, curItem.text() + "(m).*"):
+                        sourcefile = root_mono + "/" + str(file)
+                        destfile = root_mono_backup + "/" + str(file)
+                        #print(sourcefile)
+                        #print(destfile)
+                        shutil.move(destfile, sourcefile)
+                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
+
+
+
+    # print(self.tabWidget.currentIndex())
+    #self.tabWidget.currentIndex = 0
+    #popula_tab(self, type)
+    #popula_hide_tab(self, type)
+    #self.tabWidget.currentIndex = 0
+    return 1
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -582,9 +821,21 @@ class Ui_Dialog(object):
         if self.radioButton_3.isChecked():
             type = "VST"
 
-        popula_tab(self,type)
+        #popula_tab(self,type)
+        #UnHide_all(self,"Logic")
+        by_imported_file(self,"Logic")
+        by_imported_file(self,"VST")
+        by_imported_file(self,"PT")
+        popula_tab(self, type)
         popula_hide_tab(self,type)
-
+        UnHide_all(self, "Logic")
+        UnHide_all(self, "VST")
+        UnHide_all(self, "PT")
+        by_imported_file(self,"Logic")
+        by_imported_file(self,"VST")
+        by_imported_file(self,"PT")
+        popula_tab(self, type)
+        popula_hide_tab(self,type)
 
 
 
@@ -674,6 +925,8 @@ class Ui_Dialog(object):
         self.pushButton6.setIcon(QtGui.QIcon(resource_path("donate.jpg")))
         self.pushButton6.setIconSize(QtCore.QSize(120, 150))
         #self.label.setPixmap(QtGui.QPixmap(resource_path("uad.jpg")))
+
+
 
 
 
@@ -779,7 +1032,7 @@ class Ui_Dialog(object):
 
 if __name__ == '__main__':
 
-    GUI = 0
+    GUI = 1
     string = resource_path("main")
 
     if GUI != 1:
