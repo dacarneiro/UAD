@@ -600,7 +600,7 @@ def UnHide_all(self, type):
     #popula_hide_tab(self, "Logic")
     #popula_hide_tab(self, "VST")
     self.tabWidget.currentIndex = 1
-    #print(self.tableWidget_hide.rowCount())
+    print("teste")
 
     if (type == "PT"):
 
@@ -609,6 +609,7 @@ def UnHide_all(self, type):
         logger.info('--Showed AU Plugins--')
         for i in range(0, self.tableWidget_hide.rowCount()):
             combo = self.tableWidget_hide.cellWidget(i, 1)
+
 
             if (combo.currentText() != "All"):
                 self.tableWidget_hide.setCurrentCell(i, 0)
@@ -691,6 +692,21 @@ def UnHide_all(self, type):
     #popula_hide_tab(self, type)
     #self.tabWidget.currentIndex = 0
     return 1
+
+
+def popula_all(self):
+    popula_tab(self, "PT")
+    popula_hide_tab(self, "PT")
+    UnHide_all(self, "PT")
+    by_imported_file(self, "PT")
+    popula_tab(self, "VST")
+    popula_hide_tab(self, "VST")
+    UnHide_all(self, "VST")
+    by_imported_file(self, "VST")
+    popula_tab(self, "Logic")
+    popula_hide_tab(self, "Logic")
+    UnHide_all(self, "Logic")
+    by_imported_file(self, "Logic")
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -821,37 +837,7 @@ class Ui_Dialog(object):
         if self.radioButton_3.isChecked():
             type = "VST"
 
-        #popula_tab(self,type)
-        #UnHide_all(self,"Logic")
-        by_imported_file(self,"Logic")
-        by_imported_file(self,"VST")
-        by_imported_file(self,"PT")
-        popula_tab(self, "Logic")
-        popula_hide_tab(self,"Logic")
-        popula_tab(self, "PT")
-        popula_hide_tab(self,"PT")
-        popula_tab(self, "VST")
-        popula_hide_tab(self, "VST")
-        UnHide_all(self, "Logic")
-        UnHide_all(self, "VST")
-        UnHide_all(self, "PT")
-        popula_tab(self, "Logic")
-        popula_hide_tab(self,"Logic")
-        by_imported_file(self,"Logic")
-        popula_tab(self, "PT")
-        popula_hide_tab(self,"PT")
-        by_imported_file(self,"PT")
-        popula_tab(self, "VST")
-        popula_hide_tab(self, "VST")
-        by_imported_file(self,"VST")
-
-
-
-
-
-
-
-
+        popula_all(self)
 
         self.label_3 = QtWidgets.QLabel(Dialog)
         self.label_3.setGeometry(QtCore.QRect(135, 10, 450, 41))
@@ -864,7 +850,7 @@ class Ui_Dialog(object):
         self.label_3.setObjectName("label_3")
 
         self.label_7 = QtWidgets.QLabel(Dialog)
-        self.label_7.setGeometry(QtCore.QRect(530, 10, 450, 41))
+        self.label_7.setGeometry(QtCore.QRect(530, 10, 50, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
