@@ -306,12 +306,13 @@ def by_imported_file(self,type,fname):
         if (os.path.join(root, i)):
             # print(i)
             i = re.sub(extension, '', i)
+            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
             combo = QtWidgets.QComboBox();
             self.tableWidget.insertRow(self.tableWidget.rowCount())
             item = QtWidgets.QTableWidgetItem('UAD')
             item.setText(i)
             self.tableWidget.setItem(temp1 - 1, 0, item)
-            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+            #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
             for t in combo_box_options:
                 #print(i)
                 combo.addItem(t)
@@ -489,7 +490,7 @@ def popula_tab(self,type,fname):
                 self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
         logger.info('Shown tab Populed')
 
-def Hide(self, type,fname):
+def Hide(self, type, fname):
     # Move the Hided to Unsused folder.
     print(self.tabWidget.currentIndex)
     print(self.tabWidget.currentIndex)
@@ -1215,15 +1216,16 @@ class Ui_Dialog(object):
         popula_hide_tab(self,type)
         by_imported_file(self, type)
 
-    def on_click_Apply(self):
+    def on_click_Apply(self,fname):
             if self.radioButton.isChecked():
                 type = "PT"
             if self.radioButton_2.isChecked():
                 type = "Logic"
             if self.radioButton_3.isChecked():
                 type = "VST"
+            type = "Logic"
 
-            result = Hide(self,type)
+            result = Hide(self,type,fname)
             if result:
                 if type == "Logic":
                     self.label_4.setText("Succeed! If need, in Logic, go to: Logic > Preferences > Plug-ins Manager > Reset & Rescan")
