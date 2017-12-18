@@ -293,7 +293,7 @@ def by_imported_file(self,type,fname):
 
     root = path_type
     listplugin = ""
-    temp1 = 0
+    temp1 = 1
     index = 0
     pattern = '*.txt'
     path = '.'
@@ -302,22 +302,26 @@ def by_imported_file(self,type,fname):
     print(root)
     for i in sorted(glob.glob('UAD*')):
         # print(i)
-        temp1 = temp1 + 1
+        #temp1 = temp1 + 1
         if (os.path.join(root, i)):
             # print(i)
             i = re.sub(extension, '', i)
             combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-            combo = QtWidgets.QComboBox();
-            self.tableWidget.insertRow(self.tableWidget.rowCount())
-            item = QtWidgets.QTableWidgetItem('UAD')
-            item.setText(i)
-            self.tableWidget.setItem(temp1 - 1, 0, item)
-            #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-            for t in combo_box_options:
-                #print(i)
-                combo.addItem(t)
+            if combo_box_options[0] == "Shown":
+                print(combo_box_options[0])
+                print(i)
+                combo = QtWidgets.QComboBox();
+                self.tableWidget.insertRow(self.tableWidget.rowCount())
+                item = QtWidgets.QTableWidgetItem('UAD')
+                item.setText(i)
+                self.tableWidget.setItem(temp1 - 1, 0, item)
+                #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                for t in combo_box_options:
+                    #print(i)
+                    combo.addItem(t)
 
-            self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
+                self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
+                temp1 = temp1 + 1
     logger.info('Shown tab Populed')
 
 
