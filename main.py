@@ -27,6 +27,14 @@ import subprocess
 import platform
 import sys
 import logging
+from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
+from PyQt5.QtWidgets import (QMainWindow, QTextEdit,
+    QAction,QMessageBox, QFileDialog, QApplication,QPushButton,QInputDialog,QLineEdit)
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (QMainWindow, QTextEdit,
+                             QAction, QFileDialog, QApplication)
+from PyQt5.QtGui import QIcon
+
 
 
 def resource_path(relative_path):
@@ -299,6 +307,17 @@ def by_imported_file(self,type):
 
             self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
     logger.info('Shown tab Populed')
+
+
+def showDialog(self):
+    fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
+
+    if fname[0]:
+        f = open(fname[0], 'r')
+
+        with f:
+            data = f.read()
+            self.textEdit.setText(data)
 
 
 def popula_hide_tab(self,type):
@@ -725,9 +744,9 @@ class Ui_Dialog(object):
 
 
 
-        Dialog.resize(767, 470)
-        Dialog.setMinimumSize(QtCore.QSize(767, 470))
-        Dialog.setMaximumSize(QtCore.QSize(767, 470))
+        Dialog.resize(867, 570)
+        Dialog.setMinimumSize(QtCore.QSize(867, 570))
+        Dialog.setMaximumSize(QtCore.QSize(867, 570))
         Dialog.setAutoFillBackground(False)
         #Dialog.setStyleSheet("border-image:url(./uad.jpg);\n""")
         self.cb = QtWidgets.QComboBox()
@@ -737,7 +756,7 @@ class Ui_Dialog(object):
         self.cb.addItems(["Java", "C#", "Python"])
         #self.cb.currentIndexChanged.connect(self.selectionchange)
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
-        self.tabWidget.setGeometry(QtCore.QRect(5, 60, 761, 311))
+        self.tabWidget.setGeometry(QtCore.QRect(55, 160, 761, 311))
         self.tabWidget.setSizeIncrement(QtCore.QSize(0, 0))
         self.tabWidget.setBaseSize(QtCore.QSize(0, 0))
         self.tabWidget.setAutoFillBackground(False)
@@ -787,7 +806,7 @@ class Ui_Dialog(object):
 
 
         self.groupBox = QtWidgets.QGroupBox(Dialog)
-        self.groupBox.setGeometry(QtCore.QRect(615, -1, 115, 86))
+        self.groupBox.setGeometry(QtCore.QRect(315, 50, 115, 86))
         self.groupBox.setObjectName("groupBox")
         self.widget = QtWidgets.QWidget(self.groupBox)
         self.widget.setGeometry(QtCore.QRect(10, 21, 99, 65))
@@ -834,9 +853,21 @@ class Ui_Dialog(object):
             type = "PT"
         if self.radioButton_2.isChecked():
             type = "Logic"
+
         if self.radioButton_3.isChecked():
             type = "VST"
 
+        #self.tableWidget = QtWidgets.QTableWidget(self.tab)
+        #self.textEdit = QTextEdit()
+        #self.ter =
+        #self.setCentralWidget(self.textEdit)
+        #self.statusBar()
+        #openFile = QAction(QIcon('open.png'), 'Open', self)
+        #openFile.setShortcut('Ctrl+O')
+        #openFile.setStatusTip('Open new File')
+        #openFile.triggered.connect(self.showDialog)
+
+        #self.showDialog
         popula_all(self)
 
         self.label_3 = QtWidgets.QLabel(Dialog)
@@ -859,10 +890,29 @@ class Ui_Dialog(object):
         self.label_7.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_7.setObjectName("label_3")
 
+        self.label_9 = QtWidgets.QLabel(Dialog)
+        self.label_9.setGeometry(QtCore.QRect(580, 29, 60, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(90)
+        self.label_9.setFont(font)
+        self.label_9.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_9.setObjectName("label_3")
+        self.label_10 = QtWidgets.QLabel(Dialog)
+        self.label_10.setGeometry(QtCore.QRect(580, 49, 60, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(90)
+        self.label_10.setFont(font)
+        self.label_10.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_10.setObjectName("label_3")
+
 
 
         self.label_5 = QtWidgets.QLabel(Dialog)
-        self.label_5.setGeometry(QtCore.QRect(560, 440, 600, 16))
+        self.label_5.setGeometry(QtCore.QRect(660, 540, 600, 16))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -872,23 +922,32 @@ class Ui_Dialog(object):
         self.label_5.setObjectName("label_4")
 
 
+
         self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(10, 380, 400, 30))
+        self.pushButton.setGeometry(QtCore.QRect(10, 480, 400, 30))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.setToolTip('Backup Plugin Folder to your Desktop')
         self.pushButton.clicked.connect(self.on_click)
+        self.pushButton.setStyleSheet("background - color: qlineargradient(spread:pad, x1: 0.5, y1: 1, x2: 0.5, y2: 0, stop: 0.350282 rgba(0, 0, 255, 255), stop: 1 rgba(192, 199, 255, 255));")
+        #background - color: qlineargradient(spread:pad, x1: 0.5, y1: 1, x2: 0.5, y2: 0, stop: 0.350282 rgba(0, 0, 255, 255), stop: 1 rgba(192, 199, 255, 255));
 
 
+        self.pushButton_2 = QtWidgets.QPushButton(Dialog)
+        self.pushButton_2.setGeometry(QtCore.QRect(600, 80, 150, 50))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.setToolTip('Open UADSystemProfile')
+        self.pushButton_2.clicked.connect(self.on_click_openfile)
+        self.pushButton_2.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.350282 rgb(21, 121, 255), stop:1 rgb(105, 174, 251));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 2px;" "border-radius: 7px;")
 
         self.pushButton1 = QtWidgets.QPushButton(Dialog)
-        self.pushButton1.setGeometry(QtCore.QRect(650, 380, 70, 30))
+        self.pushButton1.setGeometry(QtCore.QRect(750, 480, 70, 30))
         self.pushButton1.setObjectName("pushButton")
         self.pushButton1.setToolTip('Apply')
         self.pushButton1.clicked.connect(self.on_click_Apply)
         self.pushButton1.setText("Apply")
 
         self.label_4 = QtWidgets.QLabel(Dialog)
-        self.label_4.setGeometry(QtCore.QRect(20, 415, 630, 16))
+        self.label_4.setGeometry(QtCore.QRect(20, 515, 630, 16))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -898,7 +957,7 @@ class Ui_Dialog(object):
         self.label_4.setObjectName("label_4")
 
         self.label_8 = QtWidgets.QLabel(Dialog)
-        self.label_8.setGeometry(QtCore.QRect(130, 443, 630, 16))
+        self.label_8.setGeometry(QtCore.QRect(130, 543, 630, 16))
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setBold(True)
@@ -915,7 +974,7 @@ class Ui_Dialog(object):
         self.radioButton_3.clicked.connect(self.radio_VST_click)
 
         self.pushButton6 = QtWidgets.QPushButton(Dialog)
-        self.pushButton6.setGeometry(QtCore.QRect(10, 437, 120, 30))
+        self.pushButton6.setGeometry(QtCore.QRect(10, 537, 120, 30))
         self.pushButton6.setObjectName("pushButton")
         self.pushButton6.setToolTip('Donate')
         self.pushButton6.clicked.connect(self.on_click_Donate)
@@ -923,6 +982,14 @@ class Ui_Dialog(object):
         self.pushButton6.setIcon(QtGui.QIcon(resource_path("donate.jpg")))
         self.pushButton6.setIconSize(QtCore.QSize(120, 150))
         #self.label.setPixmap(QtGui.QPixmap(resource_path("uad.jpg")))
+
+        self.user = QtWidgets.QLineEdit(Dialog)
+        self.user.setGeometry(QtCore.QRect(650, 40, 180, 17))
+        self.user.setObjectName("User")
+        self.password = QtWidgets.QLineEdit(Dialog)
+        self.password.setGeometry(QtCore.QRect(650, 60, 180, 17))
+        self.password.setObjectName("Pass")
+        self.password.setEchoMode(QtWidgets.QLineEdit.Password)
 
 
 
@@ -955,8 +1022,11 @@ class Ui_Dialog(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Currently Hidden"))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
         self.label_7.setText(_translate("Dialog", "V1.1"))
-        self.pushButton.setText(_translate("Dialog", 'Backup alll Plugin Folders "/Users"     (This can take a while)'))
+        self.label_9.setText(_translate("Dialog", "UAD User"))
+        self.label_10.setText(_translate("Dialog", "Password"))
+        self.pushButton.setText(_translate("Dialog", 'Backup all Plugin Folders "/Users"     (This can take a while)'))
         self.pushButton1.setText(_translate("Dialog", "Apply"))
+        self.pushButton_2.setText(_translate("Dialog", "Open \nUADSystemProfile"))
         self.label_4.setText(_translate("Dialog", " "))
         self.groupBox.setTitle(_translate("Dialog", "Plugin Type"))
         self.radioButton_2.setText(_translate("Dialog", "Logic - AU"))
@@ -980,6 +1050,8 @@ class Ui_Dialog(object):
 
         self.label_4.setText('Backup done in folder /Users/ ! ' )
 
+    def on_click_openfile(self):
+        print("Open File")
 
     def radio_VST_click(self):
         logger.info('VST Plugin Type Selected')

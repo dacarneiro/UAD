@@ -1,91 +1,138 @@
-# -*- coding: utf-8 -*-
+from PyQt5 import QtCore, QtWidgets
 
-# Form implementation generated from reading ui file 'main3.ui'
-#
-# Created by: PyQt5 UI code generator 5.6
-#
-# WARNING! All changes made in this file will be lost!
+__author__ = "Psycho_Coder"
 
-from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(540, 440)
-        Dialog.setMinimumSize(QtCore.QSize(540, 440))
-        Dialog.setMaximumSize(QtCore.QSize(540, 440))
-        Dialog.setAutoFillBackground(False)
-        Dialog.setStyleSheet("border-image:url(uad.jpg);\n"
-"")
-        self.tabWidget = QtWidgets.QTabWidget(Dialog)
-        self.tabWidget.setGeometry(QtCore.QRect(0, 60, 541, 311))
-        self.tabWidget.setSizeIncrement(QtCore.QSize(0, 0))
-        self.tabWidget.setBaseSize(QtCore.QSize(0, 0))
-        self.tabWidget.setAutoFillBackground(False)
-        self.tabWidget.setTabShape(QtWidgets.QTabWidget.Rounded)
-        self.tabWidget.setIconSize(QtCore.QSize(16, 16))
-        self.tabWidget.setMovable(False)
-        self.tabWidget.setObjectName("tabWidget")
-        self.tab = QtWidgets.QWidget()
-        self.tab.setObjectName("tab")
-        self.tableWidget = QtWidgets.QTableWidget(self.tab)
-        self.tableWidget.setGeometry(QtCore.QRect(0, 0, 541, 291))
-        self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(0)
-        self.tableWidget.setRowCount(0)
-        self.tableWidget_2 = QtWidgets.QTableWidget(self.tab)
-        self.tableWidget_2.setGeometry(QtCore.QRect(100, 50, 256, 192))
-        self.tableWidget_2.setObjectName("tableWidget_2")
-        self.tableWidget_2.setColumnCount(2)
-        self.tableWidget_2.setRowCount(0)
-        item = QtWidgets.QTableWidgetItem()
-        font = QtGui.QFont()
-        font.setFamily("Times New Roman")
-        font.setPointSize(16)
-        item.setFont(font)
-        self.tableWidget_2.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget_2.setHorizontalHeaderItem(1, item)
-        self.tabWidget.addTab(self.tab, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.tabWidget.addTab(self.tab_2, "")
-        self.label_3 = QtWidgets.QLabel(Dialog)
-        self.label_3.setGeometry(QtCore.QRect(80, 10, 381, 41))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_3.setFont(font)
-        self.label_3.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_3.setObjectName("label_3")
-        self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(313, 396, 211, 23))
-        self.pushButton.setObjectName("pushButton")
-        self.label_4 = QtWidgets.QLabel(Dialog)
-        self.label_4.setGeometry(QtCore.QRect(10, 420, 381, 16))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_4.setFont(font)
-        self.label_4.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_4.setObjectName("label_4")
+# noinspection PyUnresolvedReferences
+class MainUiWindow(object):
 
-        self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+    def __init__(self):
+        # Main Window
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
 
-    def retranslateUi(self, Dialog):
+        """
+        Using Grid Layouts for Widgets Alignment
+        """
+        # Grid Layout for Main Grid Layout
+        self.maingrid_layout = QtWidgets.QGridLayout(self.centralwidget)
+
+        # Grid Layout for Result Section Layout
+        self.resultgird = QtWidgets.QGridLayout()
+
+        # Grid Layout for Information section
+        self.infogrid = QtWidgets.QGridLayout()
+
+        # Grid Layout for holding all the widgets in place
+        self.outergrid = QtWidgets.QGridLayout()
+
+        # Button to clear all test input
+        self.clearall = QtWidgets.QPushButton(self.centralwidget)
+
+        # Button to show the final result by append
+        self.showres = QtWidgets.QPushButton(self.centralwidget)
+
+        # Horizontal layout to hold the result section horizontally
+        self.horizontal_layout = QtWidgets.QHBoxLayout()
+
+        """
+        Show results widgets
+        """
+        self.fullname = QtWidgets.QLabel(self.centralwidget)
+        self.result = QtWidgets.QLabel(self.centralwidget)
+
+        """
+        Get Names info section
+        """
+        self.firstname = QtWidgets.QLabel(self.centralwidget)
+        self.lastname = QtWidgets.QLabel(self.centralwidget)
+
+        # TextBox to get user input
+        self.fname = QtWidgets.QLineEdit(self.centralwidget)
+        self.lname = QtWidgets.QLineEdit(self.centralwidget)
+
+    def init_gui(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+
+        MainWindow.setStyleSheet(open("style.qss", "r").read())
+        MainWindow.setAutoFillBackground(True)
+        MainWindow.resize(328, 166)
+
+        self.centralwidget.setObjectName("centralwidget")
+
+        self.maingrid_layout.setObjectName("maingrid_layout")
+        self.outergrid.setObjectName("outergrid")
+        self.infogrid.setObjectName("infogrid")
+
+        self.firstname.setObjectName("firstname")
+        self.infogrid.addWidget(self.firstname, 0, 0, 1, 1)
+
+        self.fname.setObjectName("fname")
+        self.infogrid.addWidget(self.fname, 0, 1, 1, 1)
+
+        self.lastname.setObjectName("lastname")
+        self.infogrid.addWidget(self.lastname, 1, 0, 1, 1)
+
+        self.lname.setObjectName("lname")
+        self.infogrid.addWidget(self.lname, 1, 1, 1, 1)
+
+        self.outergrid.addLayout(self.infogrid, 0, 0, 1, 1)
+
+        self.fullname.setObjectName("fullname")
+
+        self.result.setMaximumSize(QtCore.QSize(140, 16777215))
+        self.result.setObjectName("result")
+
+        self.resultgird.setObjectName("resultgird")
+        self.resultgird.addWidget(self.fullname, 0, 0, 1, 1)
+        self.resultgird.addWidget(self.result, 0, 1, 1, 1)
+
+        self.outergrid.addLayout(self.resultgird, 1, 0, 1, 1)
+
+        self.showres.setObjectName("showres")
+        self.clearall.setObjectName("clearall")
+
+        self.horizontal_layout.setObjectName("horizontal_layout")
+        self.horizontal_layout.addWidget(self.showres)
+        self.horizontal_layout.addWidget(self.clearall)
+
+        self.outergrid.addLayout(self.horizontal_layout, 2, 0, 1, 1)
+        self.maingrid_layout.addLayout(self.outergrid, 0, 0, 1, 1)
+
+        MainWindow.setCentralWidget(self.centralwidget)
+
+        self.retranslate_gui(MainWindow)
+
+        # Add signals of clear to LineEdit widgets to clear the texts
+        self.clearall.clicked.connect(self.result.clear)
+        self.clearall.clicked.connect(self.lname.clear)
+        self.clearall.clicked.connect(self.fname.clear)
+        self.showres.clicked.connect(self.__name)
+
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def __name(self):
+        name = self.fname.text() + " " + self.lname.text()
+        self.result.setText("" + name + "")
+
+    def retranslate_gui(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "UAD HIDE/UNHIDE Plugins"))
-        item = self.tableWidget_2.horizontalHeaderItem(0)
-        item.setText(_translate("Dialog", "New Plugin"))
-        item = self.tableWidget_2.horizontalHeaderItem(1)
-        item.setText(_translate("Dialog", "New Column1"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog", "Currently Showed"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Currently Hided"))
-        self.label_3.setText(_translate("Dialog", "UAD HIDE/UNHIDE Plugins"))
-        self.pushButton.setText(_translate("Dialog", "Backup Plugin Folder to your Desktop"))
-        self.label_4.setText(_translate("Dialog", "Status"))
 
+        MainWindow.setWindowTitle(_translate("MainWindow", "Name Concatenation"))
+        self.lastname.setText(_translate("MainWindow", "Last Name :"))
+        self.firstname.setText(_translate("MainWindow", "First Name :"))
+        self.fullname.setText(_translate("MainWindow", "Concatenated Name :-"))
+        self.result.setText(_translate("MainWindow", ""))
+        self.showres.setText(_translate("MainWindow", "Show Name!"))
+        self.clearall.setText(_translate("MainWindow", "Clear All"))
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = MainUiWindow()
+    ui.init_gui(MainWindow)
+
+    MainWindow.show()
+    sys.exit(app.exec_())
