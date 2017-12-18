@@ -15,6 +15,7 @@ import csv
 import shutil
 import fnmatch
 import time
+from PyQt5.QtGui import QPainter
 import re
 import glob
 from random import randrange
@@ -28,12 +29,14 @@ import platform
 import sys
 import logging
 from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
-from PyQt5.QtWidgets import (QMainWindow, QTextEdit,
-    QAction,QMessageBox, QFileDialog, QApplication,QPushButton,QInputDialog,QLineEdit)
+from PyQt5.QtWidgets import (QMainWindow, QTextEdit,QAction,QMessageBox, QFileDialog, QApplication,QPushButton,QInputDialog,QLineEdit)
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import (QMainWindow, QTextEdit,
-                             QAction, QFileDialog, QApplication)
+from PyQt5.QtWidgets import (QMainWindow, QTextEdit,QAction, QFileDialog, QApplication)
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QLabel
+from PyQt5.QtGui import QPainter, QColor, QPen
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
 
 
 
@@ -727,6 +730,10 @@ def popula_all(self):
     UnHide_all(self, "Logic")
     by_imported_file(self, "Logic")
 
+
+
+
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         global logger
@@ -806,7 +813,7 @@ class Ui_Dialog(object):
 
 
         self.groupBox = QtWidgets.QGroupBox(Dialog)
-        self.groupBox.setGeometry(QtCore.QRect(315, 50, 115, 86))
+        self.groupBox.setGeometry(QtCore.QRect(15, 250, 115, 86))
         self.groupBox.setObjectName("groupBox")
         self.widget = QtWidgets.QWidget(self.groupBox)
         self.widget.setGeometry(QtCore.QRect(10, 21, 99, 65))
@@ -828,6 +835,7 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.radioButton_3)
         self.radioButton_3.setStyleSheet("color: rgb(255, 255, 255);\n" "font: 10pt \"MS Shell Dlg 2\";")
         #self.radioButton_3.setDisabled(1)
+        self.groupBox.setDisabled(1)
 
 
 
@@ -891,7 +899,7 @@ class Ui_Dialog(object):
         self.label_7.setObjectName("label_3")
 
         self.label_9 = QtWidgets.QLabel(Dialog)
-        self.label_9.setGeometry(QtCore.QRect(580, 29, 60, 41))
+        self.label_9.setGeometry(QtCore.QRect(130, 79, 60, 41))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)
@@ -900,7 +908,7 @@ class Ui_Dialog(object):
         self.label_9.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_9.setObjectName("label_3")
         self.label_10 = QtWidgets.QLabel(Dialog)
-        self.label_10.setGeometry(QtCore.QRect(580, 49, 60, 41))
+        self.label_10.setGeometry(QtCore.QRect(130, 99, 60, 41))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)
@@ -909,6 +917,25 @@ class Ui_Dialog(object):
         self.label_10.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_10.setObjectName("label_3")
 
+        self.label_11 = QtWidgets.QLabel(Dialog)
+        self.label_11.setGeometry(QtCore.QRect(210, 50, 550, 41))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(90)
+        self.label_11.setFont(font)
+        self.label_11.setStyleSheet("color: red;")
+        self.label_11.setObjectName("label_3")
+
+        self.label_12 = QtWidgets.QLabel(Dialog)
+        self.label_12.setGeometry(QtCore.QRect(427, 90, 550, 41))
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        font.setBold(True)
+        font.setWeight(90)
+        self.label_12.setFont(font)
+        self.label_12.setStyleSheet("color: red;")
+        self.label_12.setObjectName("label_3")
 
 
         self.label_5 = QtWidgets.QLabel(Dialog)
@@ -933,11 +960,19 @@ class Ui_Dialog(object):
 
 
         self.pushButton_2 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_2.setGeometry(QtCore.QRect(600, 80, 150, 50))
+        self.pushButton_2.setGeometry(QtCore.QRect(500, 86, 150, 50))
         self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_2.setToolTip('Open UADSystemProfile')
+        #self.pushButton_2.setToolTip('Open UADSystemProfile')
         self.pushButton_2.clicked.connect(self.on_click_openfile)
-        self.pushButton_2.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.350282 rgb(21, 121, 255), stop:1 rgb(105, 174, 251));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 2px;" "border-radius: 7px;")
+        self.pushButton_2.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 2px;" "border-radius: 7px;")
+
+
+        self.pushButton_3 = QtWidgets.QPushButton(Dialog)
+        self.pushButton_3.setGeometry(QtCore.QRect(322, 130, 55, 23))
+        self.pushButton_3.setObjectName("pushButton_2")
+        #self.pushButton_3.setToolTip('Login')
+        self.pushButton_3.clicked.connect(self.on_click_openfile)
+        self.pushButton_3.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 2px;" "border-radius: 7px;")
 
         self.pushButton1 = QtWidgets.QPushButton(Dialog)
         self.pushButton1.setGeometry(QtCore.QRect(750, 480, 70, 30))
@@ -945,6 +980,8 @@ class Ui_Dialog(object):
         self.pushButton1.setToolTip('Apply')
         self.pushButton1.clicked.connect(self.on_click_Apply)
         self.pushButton1.setText("Apply")
+
+
 
         self.label_4 = QtWidgets.QLabel(Dialog)
         self.label_4.setGeometry(QtCore.QRect(20, 515, 630, 16))
@@ -984,12 +1021,13 @@ class Ui_Dialog(object):
         #self.label.setPixmap(QtGui.QPixmap(resource_path("uad.jpg")))
 
         self.user = QtWidgets.QLineEdit(Dialog)
-        self.user.setGeometry(QtCore.QRect(650, 40, 180, 17))
+        self.user.setGeometry(QtCore.QRect(195, 90, 180, 17))
         self.user.setObjectName("User")
         self.password = QtWidgets.QLineEdit(Dialog)
-        self.password.setGeometry(QtCore.QRect(650, 60, 180, 17))
+        self.password.setGeometry(QtCore.QRect(195, 110, 180, 17))
         self.password.setObjectName("Pass")
         self.password.setEchoMode(QtWidgets.QLineEdit.Password)
+
 
 
 
@@ -1024,9 +1062,13 @@ class Ui_Dialog(object):
         self.label_7.setText(_translate("Dialog", "V1.1"))
         self.label_9.setText(_translate("Dialog", "UAD User"))
         self.label_10.setText(_translate("Dialog", "Password"))
+        self.label_11.setText(_translate("Dialog", "Please Choose one the Following Methods to Retreive Your Plugins"))
+        self.label_12.setText(_translate("Dialog", "OR"))
         self.pushButton.setText(_translate("Dialog", 'Backup all Plugin Folders "/Users"     (This can take a while)'))
         self.pushButton1.setText(_translate("Dialog", "Apply"))
         self.pushButton_2.setText(_translate("Dialog", "Open \nUADSystemProfile"))
+        self.pushButton_3.setText(_translate("Dialog", "Login"))
+
         self.label_4.setText(_translate("Dialog", " "))
         self.groupBox.setTitle(_translate("Dialog", "Plugin Type"))
         self.radioButton_2.setText(_translate("Dialog", "Logic - AU"))
@@ -1102,6 +1144,9 @@ class Ui_Dialog(object):
         url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8QLLW4HLB433J'
         if sys.platform == 'darwin':  # in case of OS X
             subprocess.Popen(['open', url])
+
+
+
 
 if __name__ == '__main__':
 
