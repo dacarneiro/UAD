@@ -16,6 +16,9 @@ import shutil
 import fnmatch
 import time
 from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
 import re
 import glob
 from random import randrange
@@ -200,17 +203,22 @@ def setcombo(self,combo_box_options,array_matched_plugins,currentfile):
 
     return combo_box_options
 
-def by_imported_file(self,type):
+def by_imported_file(self,type,fname):
     with open('/Users/carneiro/Downloads/UAD/final.csv', 'r') as f:
         # reader = csv.reader(f)
         reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
         all_plugins_list = list(reader)
 
     # print(all_plugins_list[2][0])
-
-    with open('/Users/carneiro/Downloads/UAD/UADSystemProfile.txt', 'r') as f:
+    #print(fname[0])
+    with open(fname[0], 'r') as f:
         reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
         array_my_plugins_temp = list(reader)
+
+    #with open('/Users/carneiro/Downloads/UAD/UADSystemProfile.txt', 'r') as f:
+    #    reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+    #    array_my_plugins_temp = list(reader)
+
 
     counter = len(array_my_plugins_temp)
     save = 0
@@ -272,7 +280,7 @@ def by_imported_file(self,type):
     item1.setFont(font)
     # item1.setBackground(QtGui.QColor(255, 0, 0))
     self.tableWidget.setHorizontalHeaderItem(0, item1)
-    self.tableWidget.setColumnWidth(0, 600)
+    self.tableWidget.setColumnWidth(0, 703)
     item2 = QtWidgets.QTableWidgetItem('Status')
     font = QtGui.QFont()
     font.setPointSize(15)
@@ -323,7 +331,7 @@ def showDialog(self):
             self.textEdit.setText(data)
 
 
-def popula_hide_tab(self,type):
+def popula_hide_tab(self,type,fname):
     self.tableWidget_hide.setRowCount(0)
     path_type = "/Library/Audio/Plug-Ins/Unused/Components"
     extension = "\.component"
@@ -349,7 +357,7 @@ def popula_hide_tab(self,type):
     item11.setFont(font)
     # item1.setBackground(QtGui.QColor(255, 0, 0))
     self.tableWidget_hide.setHorizontalHeaderItem(0, item11)
-    self.tableWidget_hide.setColumnWidth(0, 600)
+    self.tableWidget_hide.setColumnWidth(0, 743)
     item21 = QtWidgets.QTableWidgetItem('Status')
     font = QtGui.QFont()
     font.setPointSize(15)
@@ -384,7 +392,40 @@ def popula_hide_tab(self,type):
 
     #print(self.tableWidget_hide.rowCount())
 
-def popula_tab(self,type):
+def popula_branco(self, type):
+        self.tableWidget.setRowCount(0)
+        path_type = "/Library/Audio/Plug-Ins/Components"
+        extension = "\.component"
+        if type == "PT":
+            path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
+            extension = "\.aaxplugin"
+
+        if type == "VST":
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            extension = "\.vst"
+
+        #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
+        #        self.tableWidget.move(30, 30)
+        #        self.tableWidget.resize(400, 300)
+        item1 = QtWidgets.QTableWidgetItem('Plugin')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item1.setFont(font)
+        # item1.setBackground(QtGui.QColor(255, 0, 0))
+        self.tableWidget.setHorizontalHeaderItem(0, item1)
+        self.tableWidget.setColumnWidth(0, 743)
+        item2 = QtWidgets.QTableWidgetItem('Status')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item2.setFont(font)
+        item2.setBackground(QtGui.QColor(0, 255, 0))
+        self.tableWidget.setHorizontalHeaderItem(1, item2)
+
+        combo_box_options = ["Shown", "Hidden"]
+
+def popula_tab(self,type,fname):
         self.tableWidget.setRowCount(0)
         path_type = "/Library/Audio/Plug-Ins/Components"
         extension = "\.component"
@@ -411,7 +452,7 @@ def popula_tab(self,type):
         item1.setFont(font)
         # item1.setBackground(QtGui.QColor(255, 0, 0))
         self.tableWidget.setHorizontalHeaderItem(0, item1)
-        self.tableWidget.setColumnWidth(0, 600)
+        self.tableWidget.setColumnWidth(0, 743)
         item2 = QtWidgets.QTableWidgetItem('Status')
         font = QtGui.QFont()
         font.setPointSize(15)
@@ -448,7 +489,7 @@ def popula_tab(self,type):
                 self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
         logger.info('Shown tab Populed')
 
-def Hide(self, type):
+def Hide(self, type,fname):
     # Move the Hided to Unsused folder.
     print(self.tabWidget.currentIndex)
     print(self.tabWidget.currentIndex)
@@ -612,11 +653,11 @@ def Hide(self, type):
 
 
     # print(self.tabWidget.currentIndex())
-    popula_tab(self, type)
-    popula_hide_tab(self, type)
+    popula_tab(self, type,fname)
+    popula_hide_tab(self, type,fname)
     return 1
 
-def UnHide_all(self, type):
+def UnHide_all(self, type,fname):
     # Move the Hided to Unsused folder.
     #popula_hide_tab(self,"PT")
     #popula_hide_tab(self, "Logic")
@@ -716,19 +757,19 @@ def UnHide_all(self, type):
     return 1
 
 
-def popula_all(self):
-    popula_tab(self, "PT")
-    popula_hide_tab(self, "PT")
-    UnHide_all(self, "PT")
-    by_imported_file(self, "PT")
-    popula_tab(self, "VST")
-    popula_hide_tab(self, "VST")
-    UnHide_all(self, "VST")
-    by_imported_file(self, "VST")
-    popula_tab(self, "Logic")
-    popula_hide_tab(self, "Logic")
-    UnHide_all(self, "Logic")
-    by_imported_file(self, "Logic")
+def popula_all(self,fname):
+    popula_tab(self, "PT",fname)
+    popula_hide_tab(self, "PT",fname)
+    UnHide_all(self, "PT",fname)
+    by_imported_file(self, "PT",fname)
+    popula_tab(self, "VST",fname)
+    popula_hide_tab(self, "VST",fname)
+    UnHide_all(self, "VST",fname)
+    by_imported_file(self, "VST",fname)
+    popula_tab(self, "Logic",fname)
+    popula_hide_tab(self, "Logic",fname)
+    UnHide_all(self, "Logic",fname)
+    by_imported_file(self, "Logic",fname)
 
 
 
@@ -755,15 +796,10 @@ class Ui_Dialog(object):
         Dialog.setMinimumSize(QtCore.QSize(867, 570))
         Dialog.setMaximumSize(QtCore.QSize(867, 570))
         Dialog.setAutoFillBackground(False)
-        #Dialog.setStyleSheet("border-image:url(./uad.jpg);\n""")
-        self.cb = QtWidgets.QComboBox()
-        self.cb.setGeometry(QtCore.QRect(10, 10, 100, 100))
-        self.cb.addItem("C")
-        self.cb.addItem("C++")
-        self.cb.addItems(["Java", "C#", "Python"])
-        #self.cb.currentIndexChanged.connect(self.selectionchange)
+
+
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
-        self.tabWidget.setGeometry(QtCore.QRect(55, 160, 761, 311))
+        self.tabWidget.setGeometry(QtCore.QRect(7, 160, 851, 311))
         self.tabWidget.setSizeIncrement(QtCore.QSize(0, 0))
         self.tabWidget.setBaseSize(QtCore.QSize(0, 0))
         self.tabWidget.setAutoFillBackground(False)
@@ -778,10 +814,11 @@ class Ui_Dialog(object):
         Dialog.setPalette(p)
 
 
+
         #pixmap = QPixmap(resource_path("uad.jpg"))
         #label.setPixmap(pixmap)
         self.label = QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(25, 12, 100, 60))
+        self.label.setGeometry(QtCore.QRect(25, 32, 100, 60))
         self.label.setPixmap(QtGui.QPixmap(resource_path("uad.jpg")))
 
         #self.label_7 = QLabel(Dialog)
@@ -837,10 +874,76 @@ class Ui_Dialog(object):
         #self.radioButton_3.setDisabled(1)
         self.groupBox.setDisabled(1)
 
+        self.tabWidget_2 = QtWidgets.QTabWidget(Dialog)
+        self.tabWidget_2.setGeometry(QtCore.QRect(560, 25, 300, 111))
+        self.tabWidget_2.setSizeIncrement(QtCore.QSize(0, 0))
+        self.tabWidget_2.setBaseSize(QtCore.QSize(0, 0))
+        self.tabWidget_2.setAutoFillBackground(False)
+        self.tabWidget_2.setTabShape(QtWidgets.QTabWidget.Rounded)
+        self.tabWidget_2.setIconSize(QtCore.QSize(16, 16))
+        self.tabWidget_2.setMovable(False)
+        self.tabWidget_2.setObjectName("tabWidget_2")
+        self.tab_3 = QtWidgets.QWidget()
+        self.tab_3.setObjectName("tab_3")
+        self.tableWidget_2 = QtWidgets.QTableWidget(self.tab_3)
+        self.tableWidget_2.setGeometry(QtCore.QRect(0, 0, 541, 291))
+        self.tableWidget_2.setObjectName("tableWidget_2")
+        self.tableWidget_2.setColumnCount(0)
+        self.tableWidget_2.setRowCount(0)
+        self.tableWidget_2.setStyleSheet("background-color: rgb(50, 50, 50);")
+        self.tabWidget_2.addTab(self.tab_3, "")
+        self.tab_4 = QtWidgets.QWidget()
+        self.tab_4.setObjectName("tab_4")
+        self.tableWidget_2 = QtWidgets.QTableWidget(self.tab_4)
+        self.tableWidget_2.setGeometry(QtCore.QRect(0, 0, 541, 291))
+        self.tableWidget_2.setObjectName("tableWidget_4")
+        self.tableWidget_2.setColumnCount(0)
+        self.tableWidget_2.setRowCount(0)
+        self.tabWidget_2.addTab(self.tab_4, "")
+        self.tableWidget_2.setStyleSheet("background-color: rgb(50, 50, 50);")
+
+
+
+
+
+
+        self.pushButton_3 = QtWidgets.QPushButton(self.tab_3)
+        self.pushButton_3.setGeometry(QtCore.QRect(210, 56, 75, 23))
+        self.pushButton_3.setObjectName("pushButton_2")
+        # self.pushButton_3.setToolTip('Login')
+        self.pushButton_3.clicked.connect(self.on_click_login)
+        self.pushButton_3.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
+
+        self.user = QtWidgets.QLineEdit(self.tab_3)
+        self.user.setGeometry(QtCore.QRect(105, 15, 180, 17))
+        self.user.setObjectName("User")
+        self.password = QtWidgets.QLineEdit(self.tab_3)
+        self.password.setGeometry(QtCore.QRect(105, 35, 180, 17))
+        self.password.setObjectName("Pass")
+        self.password.setEchoMode(QtWidgets.QLineEdit.Password)
+
+        self.label_9 = QtWidgets.QLabel(self.tab_3)
+        self.label_9.setGeometry(QtCore.QRect(33, 4, 60, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(90)
+        self.label_9.setFont(font)
+        self.label_9.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_9.setObjectName("label_3")
+        self.label_10 = QtWidgets.QLabel(self.tab_3)
+        self.label_10.setGeometry(QtCore.QRect(33, 23, 60, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(90)
+        self.label_10.setFont(font)
+        self.label_10.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_10.setObjectName("label_3")
 
 
         self.tableWidget = QtWidgets.QTableWidget(self.tab)
-        self.tableWidget.setGeometry(QtCore.QRect(0, 0, 751, 291))
+        self.tableWidget.setGeometry(QtCore.QRect(0, 0, 850, 291))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(2)
         self.tableWidget.setRowCount(0)
@@ -876,10 +979,13 @@ class Ui_Dialog(object):
         #openFile.triggered.connect(self.showDialog)
 
         #self.showDialog
-        popula_all(self)
+        popula_branco(self,"Logic")
+        self.tabWidget.setDisabled(1)
+
+        #popula_all(self)
 
         self.label_3 = QtWidgets.QLabel(Dialog)
-        self.label_3.setGeometry(QtCore.QRect(135, 10, 450, 41))
+        self.label_3.setGeometry(QtCore.QRect(100, 75, 450, 41))
         font = QtGui.QFont()
         font.setPointSize(34)
         font.setBold(True)
@@ -889,7 +995,7 @@ class Ui_Dialog(object):
         self.label_3.setObjectName("label_3")
 
         self.label_7 = QtWidgets.QLabel(Dialog)
-        self.label_7.setGeometry(QtCore.QRect(530, 10, 50, 41))
+        self.label_7.setGeometry(QtCore.QRect(495, 70, 50, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -898,44 +1004,27 @@ class Ui_Dialog(object):
         self.label_7.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_7.setObjectName("label_3")
 
-        self.label_9 = QtWidgets.QLabel(Dialog)
-        self.label_9.setGeometry(QtCore.QRect(130, 79, 60, 41))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(90)
-        self.label_9.setFont(font)
-        self.label_9.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_9.setObjectName("label_3")
-        self.label_10 = QtWidgets.QLabel(Dialog)
-        self.label_10.setGeometry(QtCore.QRect(130, 99, 60, 41))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(90)
-        self.label_10.setFont(font)
-        self.label_10.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_10.setObjectName("label_3")
 
-        self.label_11 = QtWidgets.QLabel(Dialog)
-        self.label_11.setGeometry(QtCore.QRect(210, 50, 550, 41))
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(90)
-        self.label_11.setFont(font)
-        self.label_11.setStyleSheet("color: red;")
-        self.label_11.setObjectName("label_3")
 
-        self.label_12 = QtWidgets.QLabel(Dialog)
-        self.label_12.setGeometry(QtCore.QRect(427, 90, 550, 41))
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        font.setBold(True)
-        font.setWeight(90)
-        self.label_12.setFont(font)
-        self.label_12.setStyleSheet("color: red;")
-        self.label_12.setObjectName("label_3")
+        # self.label_11 = QtWidgets.QLabel(Dialog)
+        # self.label_11.setGeometry(QtCore.QRect(210, 50, 550, 41))
+        # font = QtGui.QFont()
+        # font.setPointSize(14)
+        # font.setBold(True)
+        # font.setWeight(90)
+        # self.label_11.setFont(font)
+        # self.label_11.setStyleSheet("color: red;")
+        # self.label_11.setObjectName("label_3")
+        #
+        # self.label_12 = QtWidgets.QLabel(Dialog)
+        # self.label_12.setGeometry(QtCore.QRect(427, 90, 550, 41))
+        # font = QtGui.QFont()
+        # font.setPointSize(18)
+        # font.setBold(True)
+        # font.setWeight(90)
+        # self.label_12.setFont(font)
+        # self.label_12.setStyleSheet("color: red;")
+        # self.label_12.setObjectName("label_3")
 
 
         self.label_5 = QtWidgets.QLabel(Dialog)
@@ -951,35 +1040,37 @@ class Ui_Dialog(object):
 
 
         self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(10, 480, 400, 30))
+        self.pushButton.setGeometry(QtCore.QRect(10, 480, 400, 21))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.setToolTip('Backup Plugin Folder to your Desktop')
         self.pushButton.clicked.connect(self.on_click)
-        self.pushButton.setStyleSheet("background - color: qlineargradient(spread:pad, x1: 0.5, y1: 1, x2: 0.5, y2: 0, stop: 0.350282 rgba(0, 0, 255, 255), stop: 1 rgba(192, 199, 255, 255));")
-        #background - color: qlineargradient(spread:pad, x1: 0.5, y1: 1, x2: 0.5, y2: 0, stop: 0.350282 rgba(0, 0, 255, 255), stop: 1 rgba(192, 199, 255, 255));
+        #self.pushButton.setStyleSheet("background - color: qlineargradient(spread:pad, x1: 0.5, y1: 1, x2: 0.5, y2: 0, stop: 0.350282 rgba(0, 0, 255, 255), stop: 1 rgba(192, 199, 255, 255));")
+        self.pushButton.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
 
 
-        self.pushButton_2 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_2.setGeometry(QtCore.QRect(500, 86, 150, 50))
+        self.pushButton_2 = QtWidgets.QPushButton(self.tab_4)
+        self.pushButton_2.setGeometry(QtCore.QRect(75, 17, 150, 50))
         self.pushButton_2.setObjectName("pushButton_2")
         #self.pushButton_2.setToolTip('Open UADSystemProfile')
         self.pushButton_2.clicked.connect(self.on_click_openfile)
-        self.pushButton_2.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 2px;" "border-radius: 7px;")
+        self.pushButton_2.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
+
+        self.pushButton_4 = QtWidgets.QPushButton(self.tab_4)
+        self.pushButton_4.setGeometry(QtCore.QRect(260, 50, 25, 25))
+        self.pushButton_4.setObjectName("pushButton_2")
+        #self.pushButton_4.setToolTip('Open UADSystemProfile')
+        self.pushButton_4.clicked.connect(self.on_click_openfile)
+        self.pushButton_4.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
 
 
-        self.pushButton_3 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_3.setGeometry(QtCore.QRect(322, 130, 55, 23))
-        self.pushButton_3.setObjectName("pushButton_2")
-        #self.pushButton_3.setToolTip('Login')
-        self.pushButton_3.clicked.connect(self.on_click_openfile)
-        self.pushButton_3.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 2px;" "border-radius: 7px;")
 
         self.pushButton1 = QtWidgets.QPushButton(Dialog)
-        self.pushButton1.setGeometry(QtCore.QRect(750, 480, 70, 30))
+        self.pushButton1.setGeometry(QtCore.QRect(750, 480, 70, 21))
         self.pushButton1.setObjectName("pushButton")
         self.pushButton1.setToolTip('Apply')
         self.pushButton1.clicked.connect(self.on_click_Apply)
         self.pushButton1.setText("Apply")
+        self.pushButton1.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
 
 
 
@@ -1020,13 +1111,7 @@ class Ui_Dialog(object):
         self.pushButton6.setIconSize(QtCore.QSize(120, 150))
         #self.label.setPixmap(QtGui.QPixmap(resource_path("uad.jpg")))
 
-        self.user = QtWidgets.QLineEdit(Dialog)
-        self.user.setGeometry(QtCore.QRect(195, 90, 180, 17))
-        self.user.setObjectName("User")
-        self.password = QtWidgets.QLineEdit(Dialog)
-        self.password.setGeometry(QtCore.QRect(195, 110, 180, 17))
-        self.password.setObjectName("Pass")
-        self.password.setEchoMode(QtWidgets.QLineEdit.Password)
+
 
 
 
@@ -1056,18 +1141,21 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Hide & Seek UAD Plugins"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog", "Currently Shown"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Currently Hidden"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog",   " Currently Authorized / Demo"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", " Currently Not Authorized  "))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("Dialog", "    By UAD Login    "))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Dialog", "By UADSystemProfile "))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
-        self.label_7.setText(_translate("Dialog", "V1.1"))
+        self.label_7.setText(_translate("Dialog", "V2.0"))
         self.label_9.setText(_translate("Dialog", "UAD User"))
         self.label_10.setText(_translate("Dialog", "Password"))
-        self.label_11.setText(_translate("Dialog", "Please Choose one the Following Methods to Retreive Your Plugins"))
-        self.label_12.setText(_translate("Dialog", "OR"))
+        #self.label_11.setText(_translate("Dialog", "Please Choose one the Following Methods to Retreive Your Plugins"))
+        #self.label_12.setText(_translate("Dialog", "OR"))
         self.pushButton.setText(_translate("Dialog", 'Backup all Plugin Folders "/Users"     (This can take a while)'))
         self.pushButton1.setText(_translate("Dialog", "Apply"))
         self.pushButton_2.setText(_translate("Dialog", "Open \nUADSystemProfile"))
         self.pushButton_3.setText(_translate("Dialog", "Login"))
+        self.pushButton_4.setText(_translate("Dialog", "?"))
 
         self.label_4.setText(_translate("Dialog", " "))
         self.groupBox.setTitle(_translate("Dialog", "Plugin Type"))
@@ -1093,7 +1181,18 @@ class Ui_Dialog(object):
         self.label_4.setText('Backup done in folder /Users/ ! ' )
 
     def on_click_openfile(self):
-        print("Open File")
+        #fname = QFileDialog.getOpenFileName()
+        dir = ""
+        filters = "Text files (*.txt);;UAD File (*.txt)"
+        selected_filter = "UAD File (*.txt)"
+        options = " "
+        fname = QFileDialog.getOpenFileName(Dialog, " File dialog ", dir, filters, selected_filter)
+        popula_all(self,fname)
+        self.tabWidget.setDisabled(0)
+
+
+    def on_click_login(self):
+        print("login")
 
     def radio_VST_click(self):
         logger.info('VST Plugin Type Selected')
