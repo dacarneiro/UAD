@@ -204,6 +204,7 @@ def setcombo(self,combo_box_options,array_matched_plugins,currentfile):
     return combo_box_options
 
 def by_imported_file(self,type,fname):
+    check_version(self, type, fname)
     with open('/Users/carneiro/Downloads/UAD/final.csv', 'r') as f:
         # reader = csv.reader(f)
         reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
@@ -590,6 +591,55 @@ def by_login(self, type, fname):
                     self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
                     temp1 = temp1 + 1
         logger.info('By_Imported tab Populed')
+
+def check_version(self,type,fname):
+    version = "0"
+    with open('/Users/carneiro/Downloads/UAD/final.csv', 'r') as f:
+        # reader = csv.reader(f)
+        reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+        all_plugins_list = list(reader)
+
+    # print(all_plugins_list[2][0])
+    #print(fname[0])
+    with open(fname[0], 'r') as f:
+        reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+        array_my_plugins_temp = list(reader)
+
+    #with open('/Users/carneiro/Downloads/UAD/UADSystemProfile.txt', 'r') as f:
+    #    reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+    #    array_my_plugins_temp = list(reader)
+
+
+    counter = len(array_my_plugins_temp)
+    save = 0
+
+    i = 0
+    array_my_plugins = []
+    while i < counter:
+
+        curr_version = "9.4.0"
+        current_text = str(array_my_plugins_temp[i])
+
+        if "UAD Software Release Version" in array_my_plugins_temp[i]:
+            logger.info('Software Version: ' + current_text)
+            logger.info('File Version: ' + curr_version)
+            if curr_version in current_text:
+                version = 1
+                print(version)
+                print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+
+        i = i + 1
+
+    # print(array_my_plugins[2][1])
+    # print(len(array_my_plugins))
+
+    array_matched_plugins = []
+    counter_my = len(array_my_plugins)
+    counter_all = len(all_plugins_list)
+    i = 2
+    j = 0
+    #print(version)
 
 
 def showDialog(self):
