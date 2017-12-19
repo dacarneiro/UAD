@@ -253,7 +253,7 @@ def by_imported_file(self,type,fname):
 
     #print(array_matched_plugins)
 
-    print(type)
+    #print(type)
     self.tableWidget.setRowCount(0)
     path_type = "/Library/Audio/Plug-Ins/Components"
     extension = "\.component"
@@ -298,8 +298,8 @@ def by_imported_file(self,type,fname):
     pattern = '*.txt'
     path = '.'
     os.chdir(path_type)
-    print(path_type)
-    print(root)
+    #print(path_type)
+    #print(root)
     for i in sorted(glob.glob('UAD*')):
         # print(i)
         #temp1 = temp1 + 1
@@ -308,8 +308,8 @@ def by_imported_file(self,type,fname):
             i = re.sub(extension, '', i)
             combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
             if combo_box_options[0] == "Shown":
-                print(combo_box_options[0])
-                print(i)
+                #print(combo_box_options[0])
+                #print(i)
                 combo = QtWidgets.QComboBox();
                 self.tableWidget.insertRow(self.tableWidget.rowCount())
                 item = QtWidgets.QTableWidgetItem('UAD')
@@ -322,7 +322,274 @@ def by_imported_file(self,type,fname):
 
                 self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
                 temp1 = temp1 + 1
-    logger.info('Shown tab Populed')
+    logger.info('By_Imported tab Populed')
+
+#Popular Hide
+
+    self.tableWidget_hide.setRowCount(0)
+    path_type = "/Library/Audio/Plug-Ins/Components"
+    extension = "\.component"
+    if type == "PT":
+        path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
+        extension = "\.aaxplugin"
+
+    if type == "VST":
+        path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+        extension = "\.vst"
+
+    #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
+    #        self.tableWidget.move(30, 30)
+    #        self.tableWidget.resize(400, 300)
+    for root, dirs, files in os.walk(path_type):
+        files.sort()
+        plugins = files
+        # logger.info(plugins)
+        # print(plugins)
+    item1 = QtWidgets.QTableWidgetItem('Plugin')
+    font = QtGui.QFont()
+    font.setPointSize(15)
+    font.setFamily("Times New Roman")
+    item1.setFont(font)
+    # item1.setBackground(QtGui.QColor(255, 0, 0))
+    self.tableWidget_hide.setHorizontalHeaderItem(0, item1)
+    self.tableWidget_hide.setColumnWidth(0, 703)
+    item2 = QtWidgets.QTableWidgetItem('Status')
+    font = QtGui.QFont()
+    font.setPointSize(15)
+    font.setFamily("Times New Roman")
+    item2.setFont(font)
+    # item2.setBackground(QtGui.QColor(0, 255, 0))
+    self.tableWidget_hide.setHorizontalHeaderItem(1, item2)
+
+    self.tabWidget.currentIndex = 1
+    combo_box_options = ["Shown", "Hidden"]
+    root = path_type
+    listplugin = ""
+    temp1 = 1
+    index = 0
+    pattern = '*.txt'
+    path = '.'
+    os.chdir(path_type)
+    print(path_type)
+    print(root)
+    for i in sorted(glob.glob('UAD*')):
+        # print(i)
+        #temp1 = temp1 + 1
+        if (os.path.join(root, i)):
+            # print(i)
+            i = re.sub(extension, '', i)
+            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+            if combo_box_options[0] == "Hidden":
+                print("by_Imported")
+                print(combo_box_options[0])
+                print(i)
+                combo = QtWidgets.QComboBox();
+                self.tableWidget_hide.insertRow(self.tableWidget_hide.rowCount())
+                item = QtWidgets.QTableWidgetItem('UAD')
+                item.setText(i)
+                self.tableWidget_hide.setItem(temp1 - 1, 0, item)
+                #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                for t in combo_box_options:
+                    #print(i)
+                    combo.addItem(t)
+
+                self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
+                temp1 = temp1 + 1
+    logger.info('By_Imported tab Populed')
+
+def by_login(self, type, fname):
+
+        with open('/Users/carneiro/Downloads/UAD/final.csv', 'r') as f:
+            # reader = csv.reader(f)
+            reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+            all_plugins_list = list(reader)
+
+        # print(all_plugins_list[2][0])
+        # print(fname[0])
+        with open(fname[0], 'r') as f:
+            reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+            array_my_plugins_temp = list(reader)
+
+        # with open('/Users/carneiro/Downloads/UAD/UADSystemProfile.txt', 'r') as f:
+        #    reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+        #    array_my_plugins_temp = list(reader)
+
+        counter = len(array_my_plugins_temp)
+        save = 0
+
+        i = 0
+        array_my_plugins = []
+        while i < counter:
+            # print(array_my_plugins_temp[i])
+            if "\t\t\t UAD-2 Plug-in Authorizations \t\t\t" in array_my_plugins_temp[i]:
+                save = 1
+            if save == 1:
+                array_my_plugins.append(array_my_plugins_temp[i])
+            i = i + 1
+
+        # print(array_my_plugins[2][1])
+        # print(len(array_my_plugins))
+
+        array_matched_plugins = []
+        counter_my = len(array_my_plugins)
+        counter_all = len(all_plugins_list)
+        i = 2
+        j = 0
+        while i < counter_my:
+            j = 0
+            while j < counter_all:
+                # print(array_my_plugins[i])
+                # print(all_plugins_list[j][0])
+                if (array_my_plugins[i][0] == all_plugins_list[j][0] and array_my_plugins[i][1] != " Demo not started"):
+                    array_matched_plugins.append(all_plugins_list[j])
+                j = j + 1
+            i = i + 1
+
+        # print(array_matched_plugins)
+
+        # print(type)
+        self.tableWidget.setRowCount(0)
+        path_type = "/Library/Audio/Plug-Ins/Components"
+        extension = "\.component"
+        if type == "PT":
+            path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
+            extension = "\.aaxplugin"
+
+        if type == "VST":
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            extension = "\.vst"
+
+        #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
+        #        self.tableWidget.move(30, 30)
+        #        self.tableWidget.resize(400, 300)
+        for root, dirs, files in os.walk(path_type):
+            files.sort()
+            plugins = files
+            # logger.info(plugins)
+            # print(plugins)
+        item1 = QtWidgets.QTableWidgetItem('Plugin')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item1.setFont(font)
+        # item1.setBackground(QtGui.QColor(255, 0, 0))
+        self.tableWidget.setHorizontalHeaderItem(0, item1)
+        self.tableWidget.setColumnWidth(0, 703)
+        item2 = QtWidgets.QTableWidgetItem('Status')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item2.setFont(font)
+        # item2.setBackground(QtGui.QColor(0, 255, 0))
+        self.tableWidget.setHorizontalHeaderItem(1, item2)
+
+        combo_box_options = ["Shown", "Hidden"]
+
+        root = path_type
+        listplugin = ""
+        temp1 = 1
+        index = 0
+        pattern = '*.txt'
+        path = '.'
+        os.chdir(path_type)
+        # print(path_type)
+        # print(root)
+        for i in sorted(glob.glob('UAD*')):
+            # print(i)
+            # temp1 = temp1 + 1
+            if (os.path.join(root, i)):
+                # print(i)
+                i = re.sub(extension, '', i)
+                combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                if combo_box_options[0] == "Shown":
+                    # print(combo_box_options[0])
+                    # print(i)
+                    combo = QtWidgets.QComboBox();
+                    self.tableWidget.insertRow(self.tableWidget.rowCount())
+                    item = QtWidgets.QTableWidgetItem('UAD')
+                    item.setText(i)
+                    self.tableWidget.setItem(temp1 - 1, 0, item)
+                    # combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                    for t in combo_box_options:
+                        # print(i)
+                        combo.addItem(t)
+
+                    self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
+                    temp1 = temp1 + 1
+        logger.info('By_Imported tab Populed')
+
+        # Popular Hide
+
+        self.tableWidget_hide.setRowCount(0)
+        path_type = "/Library/Audio/Plug-Ins/Components"
+        extension = "\.component"
+        if type == "PT":
+            path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
+            extension = "\.aaxplugin"
+
+        if type == "VST":
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            extension = "\.vst"
+
+        #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
+        #        self.tableWidget.move(30, 30)
+        #        self.tableWidget.resize(400, 300)
+        for root, dirs, files in os.walk(path_type):
+            files.sort()
+            plugins = files
+            # logger.info(plugins)
+            # print(plugins)
+        item1 = QtWidgets.QTableWidgetItem('Plugin')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item1.setFont(font)
+        # item1.setBackground(QtGui.QColor(255, 0, 0))
+        self.tableWidget_hide.setHorizontalHeaderItem(0, item1)
+        self.tableWidget_hide.setColumnWidth(0, 703)
+        item2 = QtWidgets.QTableWidgetItem('Status')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item2.setFont(font)
+        # item2.setBackground(QtGui.QColor(0, 255, 0))
+        self.tableWidget_hide.setHorizontalHeaderItem(1, item2)
+
+        self.tabWidget.currentIndex = 1
+        combo_box_options = ["Shown", "Hidden"]
+        root = path_type
+        listplugin = ""
+        temp1 = 1
+        index = 0
+        pattern = '*.txt'
+        path = '.'
+        os.chdir(path_type)
+        print(path_type)
+        print(root)
+        for i in sorted(glob.glob('UAD*')):
+            # print(i)
+            # temp1 = temp1 + 1
+            if (os.path.join(root, i)):
+                # print(i)
+                i = re.sub(extension, '', i)
+                combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                if combo_box_options[0] == "Hidden":
+                    print("by_Imported")
+                    print(combo_box_options[0])
+                    print(i)
+                    combo = QtWidgets.QComboBox();
+                    self.tableWidget_hide.insertRow(self.tableWidget_hide.rowCount())
+                    item = QtWidgets.QTableWidgetItem('UAD')
+                    item.setText(i)
+                    self.tableWidget_hide.setItem(temp1 - 1, 0, item)
+                    # combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                    for t in combo_box_options:
+                        # print(i)
+                        combo.addItem(t)
+
+                    self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
+                    temp1 = temp1 + 1
+        logger.info('By_Imported tab Populed')
 
 
 def showDialog(self):
@@ -762,22 +1029,34 @@ def UnHide_all(self, type,fname):
     return 1
 
 
-def popula_all(self,fname):
-    popula_tab(self, "PT",fname)
-    popula_hide_tab(self, "PT",fname)
-    UnHide_all(self, "PT",fname)
-    by_imported_file(self, "PT",fname)
-    popula_tab(self, "VST",fname)
-    popula_hide_tab(self, "VST",fname)
-    UnHide_all(self, "VST",fname)
-    by_imported_file(self, "VST",fname)
-    popula_tab(self, "Logic",fname)
-    popula_hide_tab(self, "Logic",fname)
-    UnHide_all(self, "Logic",fname)
-    by_imported_file(self, "Logic",fname)
+def popula_all(self,fname,type):
+    if type == "imported":
+        popula_tab(self, "PT",fname)
+        popula_hide_tab(self, "PT",fname)
+        UnHide_all(self, "PT",fname)
+        by_imported_file(self, "PT",fname)
+        popula_tab(self, "VST",fname)
+        popula_hide_tab(self, "VST",fname)
+        UnHide_all(self, "VST",fname)
+        by_imported_file(self, "VST",fname)
+        popula_tab(self, "Logic",fname)
+        popula_hide_tab(self, "Logic",fname)
+        UnHide_all(self, "Logic",fname)
+        by_imported_file(self, "Logic",fname)
 
-
-
+    if type == "Login":
+        popula_tab(self, "PT", fname)
+        popula_hide_tab(self, "PT", fname)
+        UnHide_all(self, "PT", fname)
+        by_imported_file(self, "PT", fname)
+        popula_tab(self, "VST", fname)
+        popula_hide_tab(self, "VST", fname)
+        UnHide_all(self, "VST", fname)
+        by_imported_file(self, "VST", fname)
+        popula_tab(self, "Logic", fname)
+        popula_hide_tab(self, "Logic", fname)
+        UnHide_all(self, "Logic", fname)
+        by_imported_file(self, "Logic", fname)
 
 
 class Ui_Dialog(object):
@@ -959,7 +1238,7 @@ class Ui_Dialog(object):
         self.tabWidget.addTab(self.tab_2, "")
 
         self.tableWidget_hide = QtWidgets.QTableWidget(self.tab_2)
-        self.tableWidget_hide.setGeometry(QtCore.QRect(0, 0, 751, 291))
+        self.tableWidget_hide.setGeometry(QtCore.QRect(0, 0, 850, 291))
         self.tableWidget_hide.setObjectName("tableWidget1")
         self.tableWidget_hide.setColumnCount(2)
         self.tableWidget_hide.setRowCount(0)
@@ -1146,8 +1425,8 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Hide & Seek UAD Plugins"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog",   " Currently Authorized / Demo"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", " Currently Not Authorized  "))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog",   " Authorized / Demo  "))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", " Not Authorized     "))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("Dialog", "    By UAD Login    "))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Dialog", "By UADSystemProfile "))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
@@ -1192,7 +1471,7 @@ class Ui_Dialog(object):
         selected_filter = "UAD File (*.txt)"
         options = " "
         fname = QFileDialog.getOpenFileName(Dialog, " File dialog ", dir, filters, selected_filter)
-        popula_all(self,fname)
+        popula_all(self,fname,"imported")
         self.tabWidget.setDisabled(0)
 
 
