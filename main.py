@@ -10,6 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush
+from os.path import expanduser
 import zipfile, os
 import csv
 import shutil
@@ -40,6 +41,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QLabel
 from PyQt5.QtGui import QPainter, QColor, QPen
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget
 
 
 
@@ -204,203 +206,203 @@ def setcombo(self,combo_box_options,array_matched_plugins,currentfile):
     return combo_box_options
 
 def by_imported_file(self,type,fname):
-    check_version(self, type, fname)
-    with open('/Users/carneiro/Downloads/UAD/final.csv', 'r') as f:
-        # reader = csv.reader(f)
-        reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
-        all_plugins_list = list(reader)
+        #self.pushButton6.setIcon(QtGui.QIcon(resource_path("donate.jpg")))
+        #with open('/Users/carneiro/Downloads/UAD/final.csv', 'r') as f:
+        with open(resource_path("final.csv"), 'r') as f:
+            # reader = csv.reader(f)
+            reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+            all_plugins_list = list(reader)
 
-    # print(all_plugins_list[2][0])
-    #print(fname[0])
-    with open(fname[0], 'r') as f:
-        reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
-        array_my_plugins_temp = list(reader)
+        # print(all_plugins_list[2][0])
+        #print(fname[0])
+        with open(fname[0], 'r') as f:
+            reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+            array_my_plugins_temp = list(reader)
 
-    #with open('/Users/carneiro/Downloads/UAD/UADSystemProfile.txt', 'r') as f:
-    #    reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
-    #    array_my_plugins_temp = list(reader)
+        #with open('/Users/carneiro/Downloads/UAD/UADSystemProfile.txt', 'r') as f:
+        #    reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+        #    array_my_plugins_temp = list(reader)
 
 
-    counter = len(array_my_plugins_temp)
-    save = 0
+        counter = len(array_my_plugins_temp)
+        save = 0
 
-    i = 0
-    array_my_plugins = []
-    while i < counter:
-        # print(array_my_plugins_temp[i])
-        if "\t\t\t UAD-2 Plug-in Authorizations \t\t\t" in array_my_plugins_temp[i]:
-            save = 1
-        if save == 1:
-            array_my_plugins.append(array_my_plugins_temp[i])
-        i = i + 1
+        i = 0
+        array_my_plugins = []
+        while i < counter:
+            # print(array_my_plugins_temp[i])
+            if "\t\t\t UAD-2 Plug-in Authorizations \t\t\t" in array_my_plugins_temp[i]:
+                save = 1
+            if save == 1:
+                array_my_plugins.append(array_my_plugins_temp[i])
+            i = i + 1
 
-    # print(array_my_plugins[2][1])
-    # print(len(array_my_plugins))
+        # print(array_my_plugins[2][1])
+        # print(len(array_my_plugins))
 
-    array_matched_plugins = []
-    counter_my = len(array_my_plugins)
-    counter_all = len(all_plugins_list)
-    i = 2
-    j = 0
-    while i < counter_my:
+        array_matched_plugins = []
+        counter_my = len(array_my_plugins)
+        counter_all = len(all_plugins_list)
+        i = 2
         j = 0
-        while j < counter_all:
-            # print(array_my_plugins[i])
-            # print(all_plugins_list[j][0])
-            if (array_my_plugins[i][0] == all_plugins_list[j][0] and array_my_plugins[i][1] != " Demo not started"):
-                array_matched_plugins.append(all_plugins_list[j])
-            j = j + 1
-        i = i + 1
+        while i < counter_my:
+            j = 0
+            while j < counter_all:
+                # print(array_my_plugins[i])
+                # print(all_plugins_list[j][0])
+                if (array_my_plugins[i][0] == all_plugins_list[j][0] and array_my_plugins[i][1] != " Demo not started"):
+                    array_matched_plugins.append(all_plugins_list[j])
+                j = j + 1
+            i = i + 1
 
-    #print(array_matched_plugins)
+        #print(array_matched_plugins)
 
-    #print(type)
-    self.tableWidget.setRowCount(0)
-    path_type = "/Library/Audio/Plug-Ins/Components"
-    extension = "\.component"
-    if type == "PT":
-        path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
-        extension = "\.aaxplugin"
+        #print(type)
+        self.tableWidget.setRowCount(0)
+        path_type = "/Library/Audio/Plug-Ins/Components"
+        extension = "\.component"
+        if type == "PT":
+            path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
+            extension = "\.aaxplugin"
 
-    if type == "VST":
-        path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
-        extension = "\.vst"
+        if type == "VST":
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            extension = "\.vst"
 
-    #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
-    #        self.tableWidget.move(30, 30)
-    #        self.tableWidget.resize(400, 300)
-    for root, dirs, files in os.walk(path_type):
-        files.sort()
-        plugins = files
-        # logger.info(plugins)
-        # print(plugins)
-    item1 = QtWidgets.QTableWidgetItem('Plugin')
-    font = QtGui.QFont()
-    font.setPointSize(15)
-    font.setFamily("Times New Roman")
-    item1.setFont(font)
-    # item1.setBackground(QtGui.QColor(255, 0, 0))
-    self.tableWidget.setHorizontalHeaderItem(0, item1)
-    self.tableWidget.setColumnWidth(0, 703)
-    item2 = QtWidgets.QTableWidgetItem('Status')
-    font = QtGui.QFont()
-    font.setPointSize(15)
-    font.setFamily("Times New Roman")
-    item2.setFont(font)
-    # item2.setBackground(QtGui.QColor(0, 255, 0))
-    self.tableWidget.setHorizontalHeaderItem(1, item2)
+        #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
+        #        self.tableWidget.move(30, 30)
+        #        self.tableWidget.resize(400, 300)
+        for root, dirs, files in os.walk(path_type):
+            files.sort()
+            plugins = files
+            # logger.info(plugins)
+            # print(plugins)
+        item1 = QtWidgets.QTableWidgetItem('Plugin')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item1.setFont(font)
+        # item1.setBackground(QtGui.QColor(255, 0, 0))
+        self.tableWidget.setHorizontalHeaderItem(0, item1)
+        self.tableWidget.setColumnWidth(0, 703)
+        item2 = QtWidgets.QTableWidgetItem('Status')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item2.setFont(font)
+        # item2.setBackground(QtGui.QColor(0, 255, 0))
+        self.tableWidget.setHorizontalHeaderItem(1, item2)
 
-    combo_box_options = ["Shown", "Hidden"]
+        combo_box_options = ["Shown", "Hidden"]
 
-    root = path_type
-    listplugin = ""
-    temp1 = 1
-    index = 0
-    pattern = '*.txt'
-    path = '.'
-    os.chdir(path_type)
-    #print(path_type)
-    #print(root)
-    for i in sorted(glob.glob('UAD*')):
-        # print(i)
-        #temp1 = temp1 + 1
-        if (os.path.join(root, i)):
+        root = path_type
+        listplugin = ""
+        temp1 = 1
+        index = 0
+        pattern = '*.txt'
+        path = '.'
+        os.chdir(path_type)
+        #print(path_type)
+        #print(root)
+        for i in sorted(glob.glob('UAD*')):
             # print(i)
-            i = re.sub(extension, '', i)
-            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-            if combo_box_options[0] == "Shown":
-                #print(combo_box_options[0])
-                #print(i)
-                combo = QtWidgets.QComboBox();
-                self.tableWidget.insertRow(self.tableWidget.rowCount())
-                item = QtWidgets.QTableWidgetItem('UAD')
-                item.setText(i)
-                self.tableWidget.setItem(temp1 - 1, 0, item)
-                #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-                for t in combo_box_options:
+            #temp1 = temp1 + 1
+            if (os.path.join(root, i)):
+                # print(i)
+                i = re.sub(extension, '', i)
+                combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                if combo_box_options[0] == "Shown":
+                    #print(combo_box_options[0])
                     #print(i)
-                    combo.addItem(t)
+                    combo = QtWidgets.QComboBox();
+                    self.tableWidget.insertRow(self.tableWidget.rowCount())
+                    item = QtWidgets.QTableWidgetItem('UAD')
+                    item.setText(i)
+                    self.tableWidget.setItem(temp1 - 1, 0, item)
+                    #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                    for t in combo_box_options:
+                        #print(i)
+                        combo.addItem(t)
 
-                self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
-                temp1 = temp1 + 1
-    logger.info('By_Imported tab Populed')
+                    self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
+                    temp1 = temp1 + 1
+        logger.info('By_Imported tab Populed')
 
-#Popular Hide
+    #Popular Hide
 
-    self.tableWidget_hide.setRowCount(0)
-    path_type = "/Library/Audio/Plug-Ins/Components"
-    extension = "\.component"
-    if type == "PT":
-        path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
-        extension = "\.aaxplugin"
+        self.tableWidget_hide.setRowCount(0)
+        path_type = "/Library/Audio/Plug-Ins/Components"
+        extension = "\.component"
+        if type == "PT":
+            path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
+            extension = "\.aaxplugin"
 
-    if type == "VST":
-        path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
-        extension = "\.vst"
+        if type == "VST":
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            extension = "\.vst"
 
-    #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
-    #        self.tableWidget.move(30, 30)
-    #        self.tableWidget.resize(400, 300)
-    for root, dirs, files in os.walk(path_type):
-        files.sort()
-        plugins = files
-        # logger.info(plugins)
-        # print(plugins)
-    item1 = QtWidgets.QTableWidgetItem('Plugin')
-    font = QtGui.QFont()
-    font.setPointSize(15)
-    font.setFamily("Times New Roman")
-    item1.setFont(font)
-    # item1.setBackground(QtGui.QColor(255, 0, 0))
-    self.tableWidget_hide.setHorizontalHeaderItem(0, item1)
-    self.tableWidget_hide.setColumnWidth(0, 703)
-    item2 = QtWidgets.QTableWidgetItem('Status')
-    font = QtGui.QFont()
-    font.setPointSize(15)
-    font.setFamily("Times New Roman")
-    item2.setFont(font)
-    # item2.setBackground(QtGui.QColor(0, 255, 0))
-    self.tableWidget_hide.setHorizontalHeaderItem(1, item2)
+        #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
+        #        self.tableWidget.move(30, 30)
+        #        self.tableWidget.resize(400, 300)
+        for root, dirs, files in os.walk(path_type):
+            files.sort()
+            plugins = files
+            # logger.info(plugins)
+            # print(plugins)
+        item1 = QtWidgets.QTableWidgetItem('Plugin')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item1.setFont(font)
+        # item1.setBackground(QtGui.QColor(255, 0, 0))
+        self.tableWidget_hide.setHorizontalHeaderItem(0, item1)
+        self.tableWidget_hide.setColumnWidth(0, 703)
+        item2 = QtWidgets.QTableWidgetItem('Status')
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setFamily("Times New Roman")
+        item2.setFont(font)
+        # item2.setBackground(QtGui.QColor(0, 255, 0))
+        self.tableWidget_hide.setHorizontalHeaderItem(1, item2)
 
-    self.tabWidget.currentIndex = 1
-    combo_box_options = ["Shown", "Hidden"]
-    root = path_type
-    listplugin = ""
-    temp1 = 1
-    index = 0
-    pattern = '*.txt'
-    path = '.'
-    os.chdir(path_type)
-    print(path_type)
-    print(root)
-    for i in sorted(glob.glob('UAD*')):
-        # print(i)
-        #temp1 = temp1 + 1
-        if (os.path.join(root, i)):
+        self.tabWidget.currentIndex = 1
+        combo_box_options = ["Shown", "Hidden"]
+        root = path_type
+        listplugin = ""
+        temp1 = 1
+        index = 0
+        pattern = '*.txt'
+        path = '.'
+        os.chdir(path_type)
+        print(path_type)
+        print(root)
+        for i in sorted(glob.glob('UAD*')):
             # print(i)
-            i = re.sub(extension, '', i)
-            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-            if combo_box_options[0] == "Hidden":
-                print("by_Imported")
-                print(combo_box_options[0])
-                print(i)
-                combo = QtWidgets.QComboBox();
-                self.tableWidget_hide.insertRow(self.tableWidget_hide.rowCount())
-                item = QtWidgets.QTableWidgetItem('UAD')
-                item.setText(i)
-                self.tableWidget_hide.setItem(temp1 - 1, 0, item)
-                #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-                for t in combo_box_options:
-                    #print(i)
-                    combo.addItem(t)
+            #temp1 = temp1 + 1
+            if (os.path.join(root, i)):
+                # print(i)
+                i = re.sub(extension, '', i)
+                combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                if combo_box_options[0] == "Hidden":
+                    print("by_Imported")
+                    print(combo_box_options[0])
+                    print(i)
+                    combo = QtWidgets.QComboBox();
+                    self.tableWidget_hide.insertRow(self.tableWidget_hide.rowCount())
+                    item = QtWidgets.QTableWidgetItem('UAD')
+                    item.setText(i)
+                    self.tableWidget_hide.setItem(temp1 - 1, 0, item)
+                    #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                    for t in combo_box_options:
+                        #print(i)
+                        combo.addItem(t)
 
-                self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
-                temp1 = temp1 + 1
-    logger.info('By_Imported tab Populed')
+                    self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
+                    temp1 = temp1 + 1
+        logger.info('By_Imported tab Populed')
 
 def by_login(self, type, fname):
-
-        with open('/Users/carneiro/Downloads/UAD/final.csv', 'r') as f:
+        with open(resource_path("final.csv"), 'r') as f:
             # reader = csv.reader(f)
             reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
             all_plugins_list = list(reader)
@@ -592,9 +594,50 @@ def by_login(self, type, fname):
                     temp1 = temp1 + 1
         logger.info('By_Imported tab Populed')
 
+def check_fileformat(self,type,fname):
+    format = "0"
+    with open(resource_path("final.csv"), 'r') as f:
+
+        # reader = csv.reader(f)
+        reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+        all_plugins_list = list(reader)
+
+    # print(all_plugins_list[2][0])
+    #print(fname[0])
+    with open(fname[0], 'r') as f:
+        reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+        array_my_plugins_temp = list(reader)
+
+    #with open('/Users/carneiro/Downloads/UAD/UADSystemProfile.txt', 'r') as f:
+    #    reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+    #    array_my_plugins_temp = list(reader)
+
+
+    counter = len(array_my_plugins_temp)
+    save = 0
+
+    i = 0
+    if os.path.getsize(fname[0]) > 0:
+
+        print(array_my_plugins_temp[0])
+        #print(array_my_plugins_temp[1])
+        logger.info(array_my_plugins_temp[0])
+        if "Universal Audio Inc." in str(array_my_plugins_temp[0]):
+            logger.info('File Format OK')
+            format = 1
+            print("11111")
+
+
+
+    if format != 1:
+        return 1
+
+    return 0
+
 def check_version(self,type,fname):
     version = "0"
-    with open('/Users/carneiro/Downloads/UAD/final.csv', 'r') as f:
+    with open(resource_path("final.csv"), 'r') as f:
+
         # reader = csv.reader(f)
         reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
         all_plugins_list = list(reader)
@@ -625,8 +668,6 @@ def check_version(self,type,fname):
             logger.info('File Version: ' + curr_version)
             if curr_version in current_text:
                 version = 1
-                print(version)
-                print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 
         i = i + 1
@@ -639,7 +680,11 @@ def check_version(self,type,fname):
     counter_all = len(all_plugins_list)
     i = 2
     j = 0
-    #print(version)
+    print(version)
+    if version != 1:
+        return 1
+
+    return 0
 
 
 def showDialog(self):
@@ -651,7 +696,6 @@ def showDialog(self):
         with f:
             data = f.read()
             self.textEdit.setText(data)
-
 
 def popula_hide_tab(self,type,fname):
     self.tableWidget_hide.setRowCount(0)
@@ -1066,8 +1110,8 @@ def Hide_new(self,type,fname):
 
 
         # print(self.tabWidget.currentIndex())
-        popula_tab(self, type, fname)
-        popula_hide_tab(self, type, fname)
+        #popula_tab(self, type, fname)
+        #popula_hide_tab(self, type, fname)
         return 1
 
 def Reset_all(self, type,fname):
@@ -1343,7 +1387,7 @@ class Ui_Dialog(object):
 
 
         self.groupBox = QtWidgets.QGroupBox(Dialog)
-        self.groupBox.setGeometry(QtCore.QRect(15, 250, 115, 86))
+        self.groupBox.setGeometry(QtCore.QRect(15, 50, 115, 86))
         self.groupBox.setObjectName("groupBox")
         self.widget = QtWidgets.QWidget(self.groupBox)
         self.widget.setGeometry(QtCore.QRect(10, 21, 99, 65))
@@ -1365,8 +1409,11 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.radioButton_3)
         self.radioButton_3.setStyleSheet("color: rgb(255, 255, 255);\n" "font: 10pt \"MS Shell Dlg 2\";")
         #self.radioButton_3.setDisabled(1)
-        self.groupBox.setDisabled(1)
+        #self.groupBox.setDisabled(1)
         self.groupBox.setHidden(1)
+
+
+
 
         # self.tabWidget_2 = QtWidgets.QTabWidget(Dialog)
         # self.tabWidget_2.setGeometry(QtCore.QRect(560, 25, 300, 111))
@@ -1534,6 +1581,7 @@ class Ui_Dialog(object):
 
 
 
+
         self.pushButton = QtWidgets.QPushButton(Dialog)
         self.pushButton.setGeometry(QtCore.QRect(10, 420, 400, 21))
         self.pushButton.setObjectName("pushButton")
@@ -1544,14 +1592,14 @@ class Ui_Dialog(object):
 
 
         self.pushButton_2 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_2.setGeometry(QtCore.QRect(665, 35, 150, 50))
+        self.pushButton_2.setGeometry(QtCore.QRect(715, 49, 135, 35))
         self.pushButton_2.setObjectName("pushButton_2")
         #self.pushButton_2.setToolTip('Open UADSystemProfile')
         self.pushButton_2.clicked.connect(self.on_click_openfile)
         self.pushButton_2.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
 
         self.pushButton_5 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_5.setGeometry(QtCore.QRect(665, 90, 120, 25))
+        self.pushButton_5.setGeometry(QtCore.QRect(715, 90, 105, 25))
         self.pushButton_5.setObjectName("pushButton_5")
         #self.pushButton_5.setToolTip('Open UADSystemProfile')
         self.pushButton_5.clicked.connect(self.on_click_reset)
@@ -1559,10 +1607,10 @@ class Ui_Dialog(object):
 
 
         self.pushButton_4 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_4.setGeometry(QtCore.QRect(790, 90, 25, 25))
+        self.pushButton_4.setGeometry(QtCore.QRect(825, 90, 25, 25))
         self.pushButton_4.setObjectName("pushButton_2")
         #self.pushButton_4.setToolTip('Open UADSystemProfile')
-        self.pushButton_4.clicked.connect(self.on_click_openfile)
+        self.pushButton_4.clicked.connect(self.PopUpVersion_help)
         self.pushButton_4.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
 
 
@@ -1573,18 +1621,19 @@ class Ui_Dialog(object):
         #self.pushButton1.setToolTip('Apply')
         self.pushButton1.clicked.connect(self.on_click_Apply)
         self.pushButton1.setText("Apply")
-        self.pushButton1.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
-
+        self.pushButton1.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(70, 70, 70), stop:1 rgb(100,103,109));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
+        #self.pushButton1.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
+        self.pushButton1.setDisabled(1)
 
 
         self.label_4 = QtWidgets.QLabel(Dialog)
-        self.label_4.setGeometry(QtCore.QRect(20, 447, 630, 16))
+        self.label_4.setGeometry(QtCore.QRect(18, 447, 630, 16))
         font = QtGui.QFont()
         font.setPointSize(13)
         font.setBold(True)
         font.setWeight(75)
         self.label_4.setFont(font)
-        self.label_4.setStyleSheet("color: rgb(128, 128, 128);")
+        self.label_4.setStyleSheet("color: rgb(240, 240, 240);")
         self.label_4.setObjectName("label_4")
 
         self.label_8 = QtWidgets.QLabel(Dialog)
@@ -1650,6 +1699,7 @@ class Ui_Dialog(object):
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Dialog", "By UADSystemProfile "))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
         self.label_7.setText(_translate("Dialog", "V2.0"))
+
         #self.label_9.setText(_translate("Dialog", "UAD User"))
         #self.label_10.setText(_translate("Dialog", "Password"))
         #self.label_11.setText(_translate("Dialog", "Please Choose one the Following Methods to Retreive Your Plugins"))
@@ -1686,14 +1736,29 @@ class Ui_Dialog(object):
 
     def on_click_openfile(self):
         #fname = QFileDialog.getOpenFileName()
-        dir = ""
+        fname = ""
+        dir = sys.argv[1]
         filters = "Text files (*.txt);;UAD File (*.txt)"
         selected_filter = "UAD File (*.txt)"
         options = " "
         fname = QFileDialog.getOpenFileName(Dialog, " File dialog ", dir, filters, selected_filter)
-        popula_all(self,fname,"imported")
-        self.tabWidget.setDisabled(0)
-
+        if fname[0] != "":
+            result_format = check_fileformat(self, type, fname)
+            print("adsd")
+            print(result_format)
+            if result_format == 1:
+                self.PopUpFileFormat()
+            if result_format != 1:
+                result = check_version(self, type, fname)
+                print(result)
+                if result == 1:
+                    self.PopUpVersion()
+                if result != 1:
+                    popula_all(self,fname,"imported")
+                    self.tabWidget.setDisabled(0)
+                    self.pushButton1.setDisabled(0)
+                    self.pushButton1.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
+                    self.label_4.setText("File Format OK! ")
 
     def on_click_reset(self):
         fname = "reset"
@@ -1743,17 +1808,130 @@ class Ui_Dialog(object):
 
 
 
+
+
+
+    def PopUpVersion(self):
+
+
+        name = "\n   This App was Designed to work with UAD Software Version 9.4.0\n   Please wait for new release.\n   You can contact Daniel (dcarneiro@hotmail.com) about it.\n   Program will close."
+        self.exPopup = examplePopup(name)
+        self.exPopup.setGeometry(500, 300, 415, 55)
+        screen = QDesktopWidget().screenGeometry()
+        geometry = Dialog.saveGeometry()
+        widget = Dialog.geometry()
+        # x = screen.width() - widget.width()
+        # y = screen.height() - widget.height()
+        y = widget.top() + ((widget.bottom() - widget.top())/2) - 50
+        x = widget.left() + ((widget.right() - widget.left())/2) - 207
+        #x = widget
+        #y = screen.height() - widget.height()
+        self.exPopup.setGeometry(x, y, 415, 95)
+
+        self.exPopup.setWindowModality(Qt.ApplicationModal)
+        self.exPopup.show()
+
+    def PopUpFileFormat(self):
+        name = "\n   This file seems not correct. Please export you Plugins. \n   Go to UAD Control Panel -> Save Detailed System Profile."
+        self.exPopup = examplePopup_help(name)
+        self.exPopup.setGeometry(500, 300, 450, 55)
+        screen = QDesktopWidget().screenGeometry()
+        geometry = Dialog.saveGeometry()
+        widget = Dialog.geometry()
+        # x = screen.width() - widget.width()
+        # y = screen.height() - widget.height()
+        y = widget.top() + ((widget.bottom() - widget.top())/2) - 50
+        x = widget.left() + ((widget.right() - widget.left())/2) - 207
+        #x = widget
+        #y = screen.height() - widget.height()
+        self.exPopup.setGeometry(x, y, 385, 60)
+
+        self.exPopup.setWindowModality(Qt.ApplicationModal)
+        self.exPopup.show()
+
+    def PopUpVersion_help(self):
+
+
+        name = "\n   To export you Plugins, go to UAD Control Panel -> Save Detailed System Profile"
+        self.exPopup = examplePopup_help(name)
+        self.exPopup.setGeometry(500, 300, 415, 55)
+        screen = QDesktopWidget().screenGeometry()
+        geometry = Dialog.saveGeometry()
+        widget = Dialog.geometry()
+        # x = screen.width() - widget.width()
+        # y = screen.height() - widget.height()
+        y = widget.top() + ((widget.bottom() - widget.top())/2) - 50
+        x = widget.left() + ((widget.right() - widget.left())/2) - 207
+        #x = widget
+        #y = screen.height() - widget.height()
+        self.exPopup.setGeometry(x, y, 504, 50)
+
+        self.exPopup.setWindowModality(Qt.ApplicationModal)
+        self.exPopup.show()
+
+
+
+
     def on_click_Donate(self):
         url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8QLLW4HLB433J'
         if sys.platform == 'darwin':  # in case of OS X
             subprocess.Popen(['open', url])
+
+    def location_on_the_screen(self):
+        screen = QDesktopWidget().screenGeometry()
+        geometry = Dialog.saveGeometry()
+        x = screen.width() - Dialog.width()
+        y = screen.height() - Dialog.height()
+        #self.move(x, y)
+        #Dialog.move(50, 450)
+        #print(x)
+        #print(y)
+
+
+
+class examplePopup(QWidget):
+    def __init__(self, name):
+        super().__init__()
+
+        self.name = name
+
+        self.initUI1()
+        self.setGeometry(700, 120, 100, 100)
+        self.resize(867, 500)
+
+
+
+
+    def initUI1(self):
+        lblName = QLabel(self.name, self)
+
+    def closeEvent(self, event):
+        sys.exit()
+
+class examplePopup_help(QWidget):
+    def __init__(self, name):
+        super().__init__()
+
+        self.name = name
+
+        self.initUI1()
+        self.setGeometry(700, 120, 100, 100)
+        self.resize(867, 500)
+
+
+
+
+    def initUI1(self):
+        lblName = QLabel(self.name, self)
+
 
 
 
 
 if __name__ == '__main__':
 
-    GUI = 1
+
+    GUI = 0
     string = resource_path("main")
 
     if GUI != 1:
@@ -1764,19 +1942,35 @@ if __name__ == '__main__':
                dir_path = os.path.dirname(os.path.realpath(__file__))
                string = string.replace(" ","\\\ ")
                string = string.replace("&","\\\&")
-               applescript = ('do shell script "' + string + '" ' 'with administrator privileges')
+               path_original = string
+               #path_original = path_original.replace('Hide\\\ \\\&\\\ Seek\\\ UAD\\\ Plugins.app/Contents/MacOS/main','')
+               path_original = path_original[:-57]
+               path_original = expanduser("~/Desktop")
+
+
+               applescript = ('do shell script "' + string + ' ' + path_original +'" ' 'with administrator privileges')
                print(applescript)
-               print(applescript)
+               #print("-----")
+               print(path_original)
                exit_code = subprocess.Popen(['osascript','-e',applescript],stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sys.exit(exit_code)
 
     #print(resource_path("main"))
 
+    logger1 = logging.getLogger('myapp')
+    hdlr1 = logging.FileHandler('/var/tmp/myapp.log')
+    formatter1 = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    hdlr1.setFormatter(formatter1)
+    logger1.addHandler(hdlr1)
+    logger1.setLevel(logging.INFO)
+    logger1.info('Path Original')
+    logger1.info(sys.argv[1])
 
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
     ui = Ui_Dialog()
     ui.setupUi(Dialog)
+    ui.location_on_the_screen()
     Dialog.show()
     sys.exit(app.exec_())
 
