@@ -1,0 +1,1 @@
+rm -rf ./build; rm -rf ./dist/; pyinstaller --onedir --windowed --icon=HideSeek.icns main.py; cp uad.jpg ./dist/main.app/Contents/MacOS/; cp donate.jpg ./dist/main.app/Contents/MacOS/; cp current_version.txt ./dist/main.app/Contents/MacOS/ ;cp final.csv ./dist/main.app/Contents/MacOS/; mv ./dist/main.app/ ./dist/Hide\ \&\ Seek\ UAD\ Plugins.app/ ; tail -f /var/tmp/myapp.log

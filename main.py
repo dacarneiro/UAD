@@ -12,6 +12,8 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush
 from os.path import expanduser
 import zipfile, os
+import paramiko
+#import SSHLibrary
 import csv
 import shutil
 import fnmatch
@@ -401,6 +403,58 @@ def by_imported_file(self,type,fname):
                     temp1 = temp1 + 1
         logger.info('By_Imported tab Populed')
 
+def PopUpVersion_CSV_Update(self,status,path):
+
+        if status == "Close_APP":
+            name = "\n   New Version Detected.\n   Please Download it in : "
+            name = name + path
+            self.exPopup = examplePopup(name)
+            self.exPopup.setGeometry(500, 300, 415, 55)
+            screen = QDesktopWidget().screenGeometry()
+            geometry = Dialog.saveGeometry()
+            widget = Dialog.geometry()
+            # x = screen.width() - widget.width()
+            # y = screen.height() - widget.height()
+            y = widget.top() + ((widget.bottom() - widget.top())/2) - 50
+            x = widget.left() + ((widget.right() - widget.left())/2) - 207
+            #x = widget
+            #y = screen.height() - widget.height()
+            self.exPopup.setGeometry(x, y, 420, 65)
+
+
+        if status == "Close_CSV":
+            name = "\n   Plugin Database Updated!. Please Restart the Application!"
+            self.exPopup = examplePopup(name)
+            self.exPopup.setGeometry(500, 300, 415, 55)
+            screen = QDesktopWidget().screenGeometry()
+            geometry = Dialog.saveGeometry()
+            widget = Dialog.geometry()
+            # x = screen.width() - widget.width()
+            # y = screen.height() - widget.height()
+            y = widget.top() + ((widget.bottom() - widget.top())/2) - 50
+            x = widget.left() + ((widget.right() - widget.left())/2) - 207
+            #x = widget
+            #y = screen.height() - widget.height()
+            self.exPopup.setGeometry(x, y, 380, 55)
+
+        if status == "NotClose":
+            name = "\n   You have the latest version!"
+            self.exPopup = examplePopup_help(name)
+            self.exPopup.setGeometry(500, 300, 415, 55)
+            screen = QDesktopWidget().screenGeometry()
+            geometry = Dialog.saveGeometry()
+            widget = Dialog.geometry()
+            # x = screen.width() - widget.width()
+            # y = screen.height() - widget.height()
+            y = widget.top() + ((widget.bottom() - widget.top())/2) - 50
+            x = widget.left() + ((widget.right() - widget.left())/2) - 107
+            #x = widget
+            #y = screen.height() - widget.height()
+            self.exPopup.setGeometry(x, y, 200, 55)
+
+        self.exPopup.setWindowModality(Qt.ApplicationModal)
+        self.exPopup.show()
+
 def by_login(self, type, fname):
         with open(resource_path("final.csv"), 'r') as f:
             # reader = csv.reader(f)
@@ -685,6 +739,109 @@ def check_version(self,type,fname):
         return 1
 
     return 0
+
+def check_version_sftp(self):
+    host = "sheepbox.dlinkddns.com"  # hard-coded
+    port = 8443
+    transport = paramiko.Transport((host, port))
+
+    password = "uad123"  # hard-coded
+    username = "uad"  # hard-coded
+    transport.connect(username=username, password=password)
+
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    #path = './THETARGETDIRECTORY/' + sys.argv[1]  # hard-coded
+    #localpath = sys.argv[1]
+    #sftp.put(localpath, path)
+
+    sftp.get("/home/uad/final_server.csv", resource_path("final_server.csv"))
+    sftp.get("/home/uad/version.txt", resource_path("version.txt"))
+
+    sftp.close()
+    transport.close()
+
+
+    version = "0"
+    with open(resource_path("version.txt"), 'r') as f:
+
+        # reader = csv.reader(f)
+        reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+        server_version_file = list(reader)
+
+    with open(resource_path("current_version.txt"), 'r') as f:
+        # reader = csv.reader(f)
+        reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+        current_version_file = list(reader)
+
+    save = 0
+
+    i = 0
+    array_my_plugins = []
+
+    #self.currentversion = "2.0"
+    #self.csv_version = "1.1"
+    #self.uad_version = "9.4.0"
+
+    current_version = str(current_version_file[0][1])
+    current_csv_version = str(current_version_file[1][1])
+    server_version = str(server_version_file[0][1])
+    server_csv_version = str(server_version_file[1][1])
+
+    download_path = str(server_version_file[2][1])
+
+    print(self.currentversion)
+    print(current_version)
+
+    if current_version != server_version:
+        logger.info('Software Version: ' + current_version)
+        logger.info('CSV File Version: ' + current_csv_version)
+        PopUpVersion_CSV_Update(self,"Close_APP",download_path)
+
+    if current_csv_version != server_csv_version:
+        logger.info('Software Version: ' + current_version)
+        logger.info('CSV File Version: ' + current_csv_version)
+        sourcefile = resource_path("version.txt")
+        destfile = resource_path("current_version.txt")
+        shutil.move(sourcefile, destfile)
+        logger.info('CSV File Updated:  ' + sourcefile + " to " + destfile)
+        sourcefile = resource_path("final_server.csv")
+        destfile = resource_path("final.csv")
+        shutil.move(sourcefile, destfile)
+        logger.info('Version File Updated:  ' + sourcefile + " to " + destfile)
+        PopUpVersion_CSV_Update(self,"Close_CSV","")
+
+
+
+
+    if current_csv_version == server_csv_version and current_version == server_version:
+        logger.info('Software Version: ' + current_version)
+        logger.info('CSV File Version: ' + current_csv_version)
+        PopUpVersion_CSV_Update(self,"NotClose","")
+
+
+
+
+
+
+
+
+
+
+    # print(array_my_plugins[2][1])
+    # print(len(array_my_plugins))
+
+    i = 2
+    j = 0
+    print(version)
+    if version != 1:
+        return 1
+
+    return 0
+
+
+
+
+
 
 
 def showDialog(self):
@@ -1334,6 +1491,10 @@ class Ui_Dialog(object):
         Dialog.setMaximumSize(QtCore.QSize(867, 500))
         Dialog.setAutoFillBackground(False)
 
+        self.currentversion = "2.0"
+        self.csv_version = "1.1"
+        self.uad_version = "9.4.0"
+
 
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
         self.tabWidget.setGeometry(QtCore.QRect(7, 100, 851, 311))
@@ -1625,6 +1786,15 @@ class Ui_Dialog(object):
         #self.pushButton1.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
         self.pushButton1.setDisabled(1)
 
+        self.pushButton_8 = QtWidgets.QPushButton(Dialog)
+        self.pushButton_8.setGeometry(QtCore.QRect(37, 90, 135, 21))
+        self.pushButton_8.setObjectName("pushButton")
+        self.pushButton_8.clicked.connect(self.on_click_check_version_sftp)
+        self.pushButton_8.setText("Check for Updates")
+        #self.pushButton_8.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(70, 70, 70), stop:1 rgb(100,103,109));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
+        self.pushButton_8.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
+
+
 
         self.label_4 = QtWidgets.QLabel(Dialog)
         self.label_4.setGeometry(QtCore.QRect(18, 447, 630, 16))
@@ -1793,9 +1963,19 @@ class Ui_Dialog(object):
         popula_hide_tab(self,type)
         by_imported_file(self, type)
 
+
+
+    def on_click_check_version_sftp(self):
+            check_version_sftp(self)
+            #self.label_4.setText("Done! Please re-open your DAW and if needed, re-scan you Plugins! ")
+
+
+
     def on_click_Apply(self,fname):
             if self.radioButton.isChecked():
                 type = "PT"
+
+
             if self.radioButton_2.isChecked():
                 type = "Logic"
             if self.radioButton_3.isChecked():
@@ -1848,6 +2028,33 @@ class Ui_Dialog(object):
 
         self.exPopup.setWindowModality(Qt.ApplicationModal)
         self.exPopup.show()
+
+
+
+
+
+    def PopUpVersion_CSV_Update(self):
+
+        name = "\n   To export you Plugins, go to UAD Control Panel -> Save Detailed System Profile"
+        self.exPopup = examplePopup_help(name)
+        self.exPopup.setGeometry(500, 300, 415, 55)
+        screen = QDesktopWidget().screenGeometry()
+        geometry = Dialog.saveGeometry()
+        widget = Dialog.geometry()
+        # x = screen.width() - widget.width()
+        # y = screen.height() - widget.height()
+        y = widget.top() + ((widget.bottom() - widget.top())/2) - 50
+        x = widget.left() + ((widget.right() - widget.left())/2) - 207
+        #x = widget
+        #y = screen.height() - widget.height()
+        self.exPopup.setGeometry(x, y, 504, 50)
+
+        self.exPopup.setWindowModality(Qt.ApplicationModal)
+        self.exPopup.show()
+
+
+
+
 
     def PopUpVersion_help(self):
 
