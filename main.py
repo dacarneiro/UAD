@@ -1491,7 +1491,7 @@ class Ui_Dialog(object):
         Dialog.setMaximumSize(QtCore.QSize(867, 500))
         Dialog.setAutoFillBackground(False)
 
-        self.currentversion = "2.0"
+        self.currentversion = "2.1"
         self.csv_version = "1.1"
         self.uad_version = "9.4.0"
 
@@ -1868,7 +1868,7 @@ class Ui_Dialog(object):
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("Dialog", "    By UAD Login    "))
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Dialog", "By UADSystemProfile "))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
-        self.label_7.setText(_translate("Dialog", "V2.0"))
+        self.label_7.setText(_translate("Dialog", "V2.1"))
 
         #self.label_9.setText(_translate("Dialog", "UAD User"))
         #self.label_10.setText(_translate("Dialog", "Password"))
