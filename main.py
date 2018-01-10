@@ -10,6 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush
+import threading
 from os.path import expanduser
 import zipfile, os
 import paramiko
@@ -185,7 +186,7 @@ def setcombo(self,combo_box_options,array_matched_plugins,currentfile):
 
         #print(array_matched_plugins[i][1])
         #print(currentfile)
-        while j < 4:
+        while j < 5:
             if (array_matched_plugins[i][j] == currentfile):
                 combo_box_options = ["Shown", "Hidden"]
                 #print("matcheeeeee")
@@ -206,6 +207,7 @@ def setcombo(self,combo_box_options,array_matched_plugins,currentfile):
 
 
     return combo_box_options
+
 
 def by_imported_file(self,type,fname):
         #self.pushButton6.setIcon(QtGui.QIcon(resource_path("donate.jpg")))
@@ -256,8 +258,8 @@ def by_imported_file(self,type,fname):
                     array_matched_plugins.append(all_plugins_list[j])
                 j = j + 1
             i = i + 1
-
-        #print(array_matched_plugins)
+        print("--------------------------------")
+        print(array_matched_plugins)
 
         #print(type)
         self.tableWidget.setRowCount(0)
@@ -833,12 +835,11 @@ def check_version_sftp(self):
     i = 2
     j = 0
     print(version)
+    print("-------------------------")
     if version != 1:
         return 1
 
     return 0
-
-
 
 
 
@@ -1841,9 +1842,15 @@ class Ui_Dialog(object):
 
 
 
+
+
+
+
         self.retranslateUi(Dialog)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+
 
 
 
@@ -1859,6 +1866,7 @@ class Ui_Dialog(object):
         d.setWindowTitle("Dialog")
         d.setWindowModality(Qt.ApplicationModal)
         d.exec_()
+
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -1888,6 +1896,7 @@ class Ui_Dialog(object):
         self.radioButton_3.setText(_translate("Dialog", "Others - VST"))
         self.label_5.setText(_translate("Dialog", "Logs at /var/tmp/myapp.log"))
         #self.label_5.setText("sdf")
+
 
 
     #@pyqtSlot()
@@ -1936,6 +1945,7 @@ class Ui_Dialog(object):
         Reset_all(self, "VST",fname)
         Reset_all(self, "Logic",fname)
         self.label_4.setText("Reset OK! All Plugins Back. ")
+
 
 
 
@@ -2179,6 +2189,7 @@ if __name__ == '__main__':
     ui.setupUi(Dialog)
     ui.location_on_the_screen()
     Dialog.show()
+
     sys.exit(app.exec_())
 
 #     build
