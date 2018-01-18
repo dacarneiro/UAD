@@ -1768,7 +1768,7 @@ class Ui_Dialog(object):
         self.label_3.setObjectName("label_3")
 
         self.label_7 = QtWidgets.QLabel(Dialog)
-        self.label_7.setGeometry(QtCore.QRect(592, 25, 50, 41))
+        self.label_7.setGeometry(QtCore.QRect(605, 23, 50, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
