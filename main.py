@@ -716,7 +716,7 @@ def check_version(self,type,fname):
     array_my_plugins = []
     while i < counter:
 
-        curr_version = "9.4.0"
+        curr_version = "9.4.1"
         current_text = str(array_my_plugins_temp[i])
 
         if "UAD Software Release Version" in array_my_plugins_temp[i]:
@@ -1492,9 +1492,9 @@ class Ui_Dialog(object):
         Dialog.setMaximumSize(QtCore.QSize(867, 500))
         Dialog.setAutoFillBackground(False)
 
-        self.currentversion = "2.1"
+        self.currentversion = "2.3"
         self.csv_version = "1.1"
-        self.uad_version = "9.4.0"
+        self.uad_version = "9.4.1"
 
 
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
@@ -1876,7 +1876,7 @@ class Ui_Dialog(object):
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("Dialog", "    By UAD Login    "))
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Dialog", "By UADSystemProfile "))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
-        self.label_7.setText(_translate("Dialog", "V2.1"))
+        self.label_7.setText(_translate("Dialog", "V2.3"))
 
         #self.label_9.setText(_translate("Dialog", "UAD User"))
         #self.label_10.setText(_translate("Dialog", "Password"))
@@ -2004,7 +2004,7 @@ class Ui_Dialog(object):
     def PopUpVersion(self):
 
 
-        name = "\n   This App was Designed to work with UAD Software Version 9.4.0\n   Please wait for new release.\n   You can contact Daniel (dcarneiro@hotmail.com) about it.\n   Program will close."
+        name = "\n   This App was Designed to work with UAD Software Version 9.4.1\n   Please wait for new release.\n   You can contact Daniel (dcarneiro@hotmail.com) about it.\n   Program will close."
         self.exPopup = examplePopup(name)
         self.exPopup.setGeometry(500, 300, 415, 55)
         screen = QDesktopWidget().screenGeometry()
@@ -2193,5 +2193,4 @@ if __name__ == '__main__':
     sys.exit(app.exec_())
 
 #     build
-#     rm -rf ./build; rm -rf ./dist/; pyinstaller --onedir --windowed --icon=HideSeek.icns main.py; cp uad.jpg ./dist/main.app/Contents/MacOS/; cp donate.jpg ./dist/main.app/Contents/MacOS/; mv ./dist/main.app/ ./dist/Hide\ \&\ Seek\ UAD\ Plugins.app/
-
+#     rm -rf ./build; rm -rf ./dist/; pyinstaller --onedir --windowed --icon=HideSeek.icns main.py; cp uad.jpg ./dist/main.app/Contents/MacOS/; cp donate.jpg ./dist/main.app/Contents/MacOS/; cp current_version.txt ./dist/main.app/Contents/MacOS/ ;cp final.csv ./dist/main.app/Contents/MacOS/; mv ./dist/main.app/ ./dist/Hide\ \&\ Seek\ UAD\ Plugins.app/
