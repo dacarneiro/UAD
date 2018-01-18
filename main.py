@@ -457,6 +457,58 @@ def PopUpVersion_CSV_Update(self,status,path):
         self.exPopup.setWindowModality(Qt.ApplicationModal)
         self.exPopup.show()
 
+
+def PopUpVersion_CannotConnect(self, status, path):
+    if status == "Close_APP":
+        name = "\n   New Version Detected.\n   Please Download it in : "
+        name = name + path
+        self.exPopup = examplePopup(name)
+        self.exPopup.setGeometry(500, 300, 415, 55)
+        screen = QDesktopWidget().screenGeometry()
+        geometry = Dialog.saveGeometry()
+        widget = Dialog.geometry()
+        # x = screen.width() - widget.width()
+        # y = screen.height() - widget.height()
+        y = widget.top() + ((widget.bottom() - widget.top()) / 2) - 50
+        x = widget.left() + ((widget.right() - widget.left()) / 2) - 207
+        # x = widget
+        # y = screen.height() - widget.height()
+        self.exPopup.setGeometry(x, y, 420, 65)
+
+    if status == "Close_CSV":
+        name = "\n          Cannot Connect to Server. Please Try Again Later!"
+        self.exPopup = examplePopup(name)
+        self.exPopup.setGeometry(500, 300, 415, 55)
+        screen = QDesktopWidget().screenGeometry()
+        geometry = Dialog.saveGeometry()
+        widget = Dialog.geometry()
+        # x = screen.width() - widget.width()
+        # y = screen.height() - widget.height()
+        y = widget.top() + ((widget.bottom() - widget.top()) / 2) - 50
+        x = widget.left() + ((widget.right() - widget.left()) / 2) - 207
+        # x = widget
+        # y = screen.height() - widget.height()
+        self.exPopup.setGeometry(x, y, 380, 55)
+
+    if status == "NotClose":
+        name = "\n   You have the latest version!"
+        self.exPopup = examplePopup_help(name)
+        self.exPopup.setGeometry(500, 300, 415, 55)
+        screen = QDesktopWidget().screenGeometry()
+        geometry = Dialog.saveGeometry()
+        widget = Dialog.geometry()
+        # x = screen.width() - widget.width()
+        # y = screen.height() - widget.height()
+        y = widget.top() + ((widget.bottom() - widget.top()) / 2) - 50
+        x = widget.left() + ((widget.right() - widget.left()) / 2) - 107
+        # x = widget
+        # y = screen.height() - widget.height()
+        self.exPopup.setGeometry(x, y, 200, 55)
+
+    self.exPopup.setWindowModality(Qt.ApplicationModal)
+    self.exPopup.show()
+
+
 def by_login(self, type, fname):
         with open(resource_path("final.csv"), 'r') as f:
             # reader = csv.reader(f)
@@ -742,83 +794,99 @@ def check_version(self,type,fname):
 
     return 0
 
+
+
+
+
+
+
 def check_version_sftp(self):
-    host = "sheepbox.dlinkddns.com"  # hard-coded
-    port = 8443
-    transport = paramiko.Transport((host, port))
-
-    password = "uad123"  # hard-coded
-    username = "uad"  # hard-coded
-    transport.connect(username=username, password=password)
-
-    sftp = paramiko.SFTPClient.from_transport(transport)
-    #path = './THETARGETDIRECTORY/' + sys.argv[1]  # hard-coded
-    #localpath = sys.argv[1]
-    #sftp.put(localpath, path)
-
-    sftp.get("/home/uad/final_server.csv", resource_path("final_server.csv"))
-    sftp.get("/home/uad/version.txt", resource_path("version.txt"))
-
-    sftp.close()
-    transport.close()
-
-
+    notconnect = 0
     version = "0"
-    with open(resource_path("version.txt"), 'r') as f:
+    try:
+        host = "sheepbox.dlinkddnds.com"  # hard-coded
+        #host = "192.168.1.80"  # hard-coded
+        port = 8443
+        transport = paramiko.Transport((host, port))
 
-        # reader = csv.reader(f)
-        reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
-        server_version_file = list(reader)
+        password = "uad123"  # hard-coded
+        username = "uad"  # hard-coded
+        transport.connect(username=username, password=password)
 
-    with open(resource_path("current_version.txt"), 'r') as f:
-        # reader = csv.reader(f)
-        reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
-        current_version_file = list(reader)
+        sftp = paramiko.SFTPClient.from_transport(transport)
+        # path = './THETARGETDIRECTORY/' + sys.argv[1]  # hard-coded
+        # localpath = sys.argv[1]
+        # sftp.put(localpath, path)
 
-    save = 0
+        sftp.get("/home/uad/final_server.csv", resource_path("final_server.csv"))
+        sftp.get("/home/uad/version.txt", resource_path("version.txt"))
 
-    i = 0
-    array_my_plugins = []
-
-    #self.currentversion = "2.0"
-    #self.csv_version = "1.1"
-    #self.uad_version = "9.4.0"
-
-    current_version = str(current_version_file[0][1])
-    current_csv_version = str(current_version_file[1][1])
-    server_version = str(server_version_file[0][1])
-    server_csv_version = str(server_version_file[1][1])
-
-    download_path = str(server_version_file[2][1])
-
-    print(self.currentversion)
-    print(current_version)
-
-    if current_version != server_version:
-        logger.info('Software Version: ' + current_version)
-        logger.info('CSV File Version: ' + current_csv_version)
-        PopUpVersion_CSV_Update(self,"Close_APP",download_path)
-
-    if current_csv_version != server_csv_version:
-        logger.info('Software Version: ' + current_version)
-        logger.info('CSV File Version: ' + current_csv_version)
-        sourcefile = resource_path("version.txt")
-        destfile = resource_path("current_version.txt")
-        shutil.move(sourcefile, destfile)
-        logger.info('CSV File Updated:  ' + sourcefile + " to " + destfile)
-        sourcefile = resource_path("final_server.csv")
-        destfile = resource_path("final.csv")
-        shutil.move(sourcefile, destfile)
-        logger.info('Version File Updated:  ' + sourcefile + " to " + destfile)
-        PopUpVersion_CSV_Update(self,"Close_CSV","")
+        sftp.close()
+        transport.close()
+    except:
+        print ("Cannot Connect to Server to Check Version!")
+        logger.info('Cannot Connect to Server to Check Version!')
+        notconnect = 1
+        PopUpVersion_CannotConnect(self, "Close_CSV", "")
 
 
+    if notconnect == 0:
+
+        with open(resource_path("version.txt"), 'r') as f:
+
+            # reader = csv.reader(f)
+            reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+            server_version_file = list(reader)
+
+        with open(resource_path("current_version.txt"), 'r') as f:
+            # reader = csv.reader(f)
+            reader = csv.reader(f, delimiter=';', quoting=csv.QUOTE_NONE)
+            current_version_file = list(reader)
+
+        save = 0
+
+        i = 0
+        array_my_plugins = []
+
+        #self.currentversion = "2.0"
+        #self.csv_version = "1.1"
+        #self.uad_version = "9.4.0"
+
+        current_version = str(current_version_file[0][1])
+        current_csv_version = str(current_version_file[1][1])
+        server_version = str(server_version_file[0][1])
+        server_csv_version = str(server_version_file[1][1])
+
+        download_path = str(server_version_file[2][1])
+
+        print(self.currentversion)
+        print(current_version)
+
+        if current_version != server_version:
+            logger.info('Software Version: ' + current_version)
+            logger.info('CSV File Version: ' + current_csv_version)
+            PopUpVersion_CSV_Update(self,"Close_APP",download_path)
+
+        if current_csv_version != server_csv_version:
+            logger.info('Software Version: ' + current_version)
+            logger.info('CSV File Version: ' + current_csv_version)
+            sourcefile = resource_path("version.txt")
+            destfile = resource_path("current_version.txt")
+            shutil.move(sourcefile, destfile)
+            logger.info('CSV File Updated:  ' + sourcefile + " to " + destfile)
+            sourcefile = resource_path("final_server.csv")
+            destfile = resource_path("final.csv")
+            shutil.move(sourcefile, destfile)
+            logger.info('Version File Updated:  ' + sourcefile + " to " + destfile)
+            PopUpVersion_CSV_Update(self,"Close_CSV","")
 
 
-    if current_csv_version == server_csv_version and current_version == server_version:
-        logger.info('Software Version: ' + current_version)
-        logger.info('CSV File Version: ' + current_csv_version)
-        PopUpVersion_CSV_Update(self,"NotClose","")
+
+
+        if current_csv_version == server_csv_version and current_version == server_version:
+            logger.info('Software Version: ' + current_version)
+            logger.info('CSV File Version: ' + current_csv_version)
+            PopUpVersion_CSV_Update(self,"NotClose","")
 
 
 
