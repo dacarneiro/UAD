@@ -477,7 +477,7 @@ def PopUpVersion_CannotConnect(self, status, path):
 
     if status == "Close_CSV":
         name = "\n          Cannot Connect to Server. Please Try Again Later!"
-        self.exPopup = examplePopup(name)
+        self.exPopup = examplePopup_help(name)
         self.exPopup.setGeometry(500, 300, 415, 55)
         screen = QDesktopWidget().screenGeometry()
         geometry = Dialog.saveGeometry()
