@@ -845,6 +845,7 @@ def check_version_sftp(self):
 
 
 
+
 def showDialog(self):
     fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
 
