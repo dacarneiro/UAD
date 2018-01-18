@@ -6,6 +6,9 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+import _cffi_backend as backend
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QSize
@@ -969,7 +972,7 @@ def popula_hide_tab(self,type,fname):
     path = '.'
     os.chdir(path_type)
     for i in sorted(glob.glob('UAD*')):
-        
+
         temp1 = temp1 + 1
         if (os.path.join(root, i)):
             i = re.sub(extension, '', i)
@@ -1056,7 +1059,7 @@ def popula_tab(self,type,fname):
 
 
         combo_box_options = ["Shown", "Hidden"]
-        
+
         root = path_type
         listplugin = ""
         temp1 = 0
