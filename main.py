@@ -1570,8 +1570,6 @@ class Ui_Dialog(object):
         self.uad_version = "9.5"
 
 
-
-
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
         self.tabWidget.setGeometry(QtCore.QRect(7, 100, 851, 311))
         self.tabWidget.setSizeIncrement(QtCore.QSize(0, 0))
