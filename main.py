@@ -1571,6 +1571,7 @@ class Ui_Dialog(object):
 
 
 
+
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
         self.tabWidget.setGeometry(QtCore.QRect(7, 100, 851, 311))
         self.tabWidget.setSizeIncrement(QtCore.QSize(0, 0))
