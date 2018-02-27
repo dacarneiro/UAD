@@ -2018,6 +2018,7 @@ class Ui_Dialog(object):
     def on_click_openfile(self):
         self.pushButton_2.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(100, 0, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
         #fname = QFileDialog.getOpenFileName()
+
         fname = ""
         dir = sys.argv[1]
         filters = "Text files (*.txt);;UAD File (*.txt)"
