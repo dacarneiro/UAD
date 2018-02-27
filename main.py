@@ -1588,7 +1588,6 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
 
 
-
         Dialog.resize(867, 500)
         Dialog.setMinimumSize(QtCore.QSize(867, 500))
         Dialog.setMaximumSize(QtCore.QSize(867, 500))
