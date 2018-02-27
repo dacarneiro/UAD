@@ -21,6 +21,7 @@ import paramiko
 import csv
 import shutil
 import fnmatch
+import atexit
 import time
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
@@ -800,6 +801,15 @@ def check_version(self,type,fname):
 
 
 
+def exit_handler(image_path,device):
+    #image_path = self.image_path
+    print("My application is ending!")
+    subprocess.call("'" + image_path + "update.sh' " + "'" + image_path + "'" + " " + device, shell=True)
+    #image_path = "/Users/andre/Downloads/UAD/dist/Hide & Seek UAD Plugins.app/Contents/MacOS/"
+    subprocess.call("hdiutil detach " + device, shell=True)
+    text_execute = "rm -rf '" + image_path + "temp'"
+    subprocess.call(text_execute, shell=True)
+
 
 
 
@@ -807,12 +817,13 @@ def check_version(self,type,fname):
 def check_version_sftp(self):
     notconnect = 0
     version = "0"
+    self.image_file = "Hide & Seek UAD Plugins_V2.4.dmg"
     try:
-        host = "sheepbox.dlinkddnds.com"  # hard-coded
-        #host = "192.168.1.80"  # hard-coded
+        #host = "sheepbox.dlinkddnds.com"  # hard-coded
+        host = "192.168.1.80"  # hard-coded
         port = 8443
         transport = paramiko.Transport((host, port))
-
+        print(host)
         password = "uad123"  # hard-coded
         username = "uad"  # hard-coded
         transport.connect(username=username, password=password)
@@ -824,6 +835,9 @@ def check_version_sftp(self):
 
         sftp.get("/home/uad/final_server.csv", resource_path("final_server.csv"))
         sftp.get("/home/uad/version.txt", resource_path("version.txt"))
+        sftp.get("/home/uad/files/Hide & Seek UAD Plugins_beta.dmg", resource_path(self.image_file))
+
+
 
         sftp.close()
         transport.close()
@@ -892,6 +906,23 @@ def check_version_sftp(self):
             logger.info('CSV File Version: ' + current_csv_version)
             PopUpVersion_CSV_Update(self,"NotClose","")
 
+        image_path = resource_path("")
+        self.image_path = resource_path("")
+        #print(image_path)
+        text_execute = "mkdir '" + image_path +   "temp'"
+        #print(text_execute)
+        subprocess.call(text_execute, shell=True)
+
+        text_execute = "hdiutil  attach -nobrowse -noverify '" + image_path + self.image_file + "'  -mountroot '" +  image_path +   "temp'"
+        #print(text_execute)
+        subprocess.call(text_execute, shell=True)
+        self.device = subprocess.check_output("mount | grep 'Hide & Seek UAD Plugins' | cut -d' ' -f 1" , shell=True)
+        self.device = self.device.decode('ascii')
+        #print(device)
+        #subprocess.call("hdiutil detach " + self.device ,shell=True)
+        subprocess.call("chmod +x '" + image_path + "update.sh'", shell=True)
+        #subprocess.call(image_path + "update.sh" ,shell=True)
+        atexit.register(exit_handler,image_path, self.device)
 
 
 
@@ -899,9 +930,7 @@ def check_version_sftp(self):
 
 
 
-
-
-    # print(array_my_plugins[2][1])
+        # print(array_my_plugins[2][1])
     # print(len(array_my_plugins))
 
     i = 2
@@ -1949,7 +1978,7 @@ class Ui_Dialog(object):
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("Dialog", "    By UAD Login    "))
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Dialog", "By UADSystemProfile "))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
-        self.label_7.setText(_translate("Dialog", "V2.4"))
+        self.label_7.setText(_translate("Dialog", "V2.4b"))
 
         #self.label_9.setText(_translate("Dialog", "UAD User"))
         #self.label_10.setText(_translate("Dialog", "Password"))
@@ -1987,6 +2016,7 @@ class Ui_Dialog(object):
         self.label_4.setText('Backup done in folder /Users/ ! ' )
 
     def on_click_openfile(self):
+        self.pushButton_2.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(100, 0, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
         #fname = QFileDialog.getOpenFileName()
         fname = ""
         dir = sys.argv[1]
