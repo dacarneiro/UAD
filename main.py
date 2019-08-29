@@ -773,7 +773,7 @@ def check_version(self,type,fname):
     array_my_plugins = []
     while i < counter:
 
-        curr_version = "9.9"
+        curr_version = "9.10"
         current_text = str(array_my_plugins_temp[i])
 
         if "UAD Software Release Version" in array_my_plugins_temp[i]:
@@ -1567,7 +1567,7 @@ class Ui_Dialog(object):
 
         self.currentversion = "2.4"
         self.csv_version = "1.3"
-        self.uad_version = "9.9"
+        self.uad_version = "9.10"
 
 
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
@@ -1772,7 +1772,7 @@ class Ui_Dialog(object):
         self.label_3.setObjectName("label_3")
 
         self.label_7 = QtWidgets.QLabel(Dialog)
-        self.label_7.setGeometry(QtCore.QRect(605, 23, 50, 41))
+        self.label_7.setGeometry(QtCore.QRect(605, 23, 90, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -1949,7 +1949,7 @@ class Ui_Dialog(object):
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("Dialog", "    By UAD Login    "))
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Dialog", "By UADSystemProfile "))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
-        self.label_7.setText(_translate("Dialog", "V2.4"))
+        self.label_7.setText(_translate("Dialog", "V2.4  (9.10)"))
 
         #self.label_9.setText(_translate("Dialog", "UAD User"))
         #self.label_10.setText(_translate("Dialog", "Password"))
@@ -2077,7 +2077,7 @@ class Ui_Dialog(object):
     def PopUpVersion(self):
 
 
-        name = "\n   This App was Designed to work with UAD Software Version 9.9\n   Please wait for new release.\n   You can contact Daniel (dcarneiro@hotmail.com) about it.\n   Program will close."
+        name = "\n   This App was Designed to work with UAD Software Version 9.10\n   Please wait for new release.\n   You can contact Daniel (dcarneiro@hotmail.com) about it.\n   Program will close."
         self.exPopup = examplePopup(name)
         self.exPopup.setGeometry(500, 300, 415, 55)
         screen = QDesktopWidget().screenGeometry()
