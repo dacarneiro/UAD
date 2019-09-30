@@ -2295,6 +2295,9 @@ if __name__ == '__main__':
 
         # Code of your program here
 
+        newpath = r'C:/temp1'
+        if not os.path.exists(newpath):
+            os.makedirs(newpath)
         logger1 = logging.getLogger('myapp')
         hdlr1 = logging.FileHandler('C:/temp/myapp.log')
         formatter1 = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
