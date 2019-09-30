@@ -780,7 +780,7 @@ def check_version(self,type,fname):
     array_my_plugins = []
     while i < counter:
 
-        curr_version = "9.9"
+        curr_version = "9.6"
         current_text = str(array_my_plugins_temp[i])
 
         if "UAD Software Release Version" in array_my_plugins_temp[i]:
@@ -1607,7 +1607,7 @@ class Ui_Dialog(object):
 
         self.currentversion = "2.4"
         self.csv_version = "1.3"
-        self.uad_version = "9.9"
+        self.uad_version = "9.6"
 
 
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
@@ -1642,14 +1642,14 @@ class Ui_Dialog(object):
         #logger.info(resource_path("uad.jpg"))
         #print(resource_path("uad.jpg"))
 
-        directory = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Unused"
+        directory = "/Library/Audio/Plug-Ins/Unused/Components"
         if not os.path.exists(directory):
             os.makedirs(directory)
-        directory = "C:/Program Files/Steinberg/VSTPlugins/Unused"
+        directory = "/Library/Application Support/Avid/Audio/Unused"
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        directory = "C:/Program Files/Steinberg/VSTPlugins/Unused/Mono"
+        directory = "/Library/Audio/Plug-Ins/Unused/VST"
         if not os.path.exists(directory):
             os.makedirs(directory)
 
@@ -1812,9 +1812,9 @@ class Ui_Dialog(object):
         self.label_3.setObjectName("label_3")
 
         self.label_7 = QtWidgets.QLabel(Dialog)
-        self.label_7.setGeometry(QtCore.QRect(600, 21, 175, 39))
+        self.label_7.setGeometry(QtCore.QRect(605, 23, 50, 41))
         font = QtGui.QFont()
-        font.setPointSize(8)
+        font.setPointSize(10)
         font.setBold(True)
         font.setWeight(90)
         self.label_7.setFont(font)
@@ -1911,7 +1911,7 @@ class Ui_Dialog(object):
 
 
         self.label_4 = QtWidgets.QLabel(Dialog)
-        self.label_4.setGeometry(QtCore.QRect(18, 440, 630, 20))
+        self.label_4.setGeometry(QtCore.QRect(18, 447, 630, 16))
         font = QtGui.QFont()
         font.setPointSize(13)
         font.setBold(True)
@@ -1989,7 +1989,7 @@ class Ui_Dialog(object):
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("Dialog", "    By UAD Login    "))
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Dialog", "By UADSystemProfile "))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
-        self.label_7.setText(_translate("Dialog", "V2.4b for Windows (UAD V9.10)"))
+        self.label_7.setText(_translate("Dialog", "V2.4b"))
 
         #self.label_9.setText(_translate("Dialog", "UAD User"))
         #self.label_10.setText(_translate("Dialog", "Password"))
@@ -2119,7 +2119,7 @@ class Ui_Dialog(object):
     def PopUpVersion(self):
 
 
-        name = "\n   This App was Designed to work with UAD Software Version 9.9\n   Please wait for new release.\n   You can contact Daniel (dcarneiro@hotmail.com) about it.\n   Program will close."
+        name = "\n   This App was Designed to work with UAD Software Version 9.6\n   Please wait for new release.\n   You can contact Daniel (dcarneiro@hotmail.com) about it.\n   Program will close."
         self.exPopup = examplePopup(name)
         self.exPopup.setGeometry(500, 300, 415, 55)
         screen = QDesktopWidget().screenGeometry()
@@ -2290,9 +2290,8 @@ if __name__ == '__main__':
                sys.exit(exit_code)
 
     #print(resource_path("main"))
-    if (len(sys.argv) > 1 and is_admin()):
 
-
+    if is_admin():
         # Code of your program here
 
         logger1 = logging.getLogger('myapp')
