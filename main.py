@@ -7,47 +7,48 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-import _cffi_backend as backend
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QImage, QPalette, QBrush
+
+# import _cffi_backend as backend
+# from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+# from cryptography.hazmat.backends import default_backend
+# from PyQt5 import QtCore, QtGui, QtWidgets
+# from PyQt5.QtCore import pyqtSlot
+# from PyQt5.QtCore import QSize
+# from PyQt5.QtGui import QImage, QPalette, QBrush
 import threading
 from os.path import expanduser
 from os.path import exists
-import zipfile, os
+import os
 import paramiko
 #import SSHLibrary
 import csv
 import shutil
 import fnmatch
-import time
-from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
+# import time
+# from PyQt5.QtGui import QPainter
+# from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QIcon
+# from PyQt5.QtGui import QIcon
 import re
 import glob
-from random import randrange
-from sys import argv, exit
-from PyQt5.QtWidgets import QListWidgetItem, QListWidget, QApplication, QGroupBox, QVBoxLayout, QPushButton
+# from random import randrange
+# from sys import argv, exit
+# from PyQt5.QtWidgets import QListWidgetItem, QListWidget, QApplication, QGroupBox, QVBoxLayout, QPushButton
 from PyQt5.QtWidgets import *
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel
-from PyQt5.QtGui import QIcon, QPixmap
+# from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+# from PyQt5.QtGui import QIcon, QPixmap
 import subprocess
 import platform
 import sys
 import logging
-from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
+# from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
 from PyQt5.QtWidgets import (QMainWindow, QTextEdit,QAction,QMessageBox, QFileDialog, QApplication,QPushButton,QInputDialog,QLineEdit)
-from PyQt5.QtGui import QIcon
+# from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QMainWindow, QTextEdit,QAction, QFileDialog, QApplication)
-from PyQt5.QtGui import QIcon
+# from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QLabel
-from PyQt5.QtGui import QPainter, QColor, QPen
-from PyQt5.QtGui import QIcon
+# from PyQt5.QtGui import QPainter, QColor, QPen
+# from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget
 
@@ -1127,7 +1128,7 @@ def check_version_sftp(self):
         logger.info('Cannot Connect to Server to Check Version!')
         notconnect = 1
         PopUpVersion_CannotConnect(self, "Close_CSV", "")
-        
+
 
 
     if notconnect == 0:
