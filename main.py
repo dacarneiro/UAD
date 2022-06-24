@@ -2,10 +2,10 @@
 
 # Form implementation generated from reading ui file 'main.ui'
 #
+
 # Created by: PyQt5 UI code generator 5.6
 #
 # WARNING! All changes made in this file will be lost!
-
 
 import _cffi_backend as backend
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -16,14 +16,13 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush
 import threading
 from os.path import expanduser
+from os.path import exists
 import zipfile, os
 import paramiko
 #import SSHLibrary
 import csv
 import shutil
-import ctypes, sys, os
 import fnmatch
-import atexit
 import time
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
@@ -53,11 +52,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget
 
 
-def is_admin():
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
 
 def resource_path(relative_path):
 #""" Get absolute path to resource, works for dev and for PyInstaller """
@@ -264,8 +258,8 @@ def by_imported_file(self,type,fname):
         while i < counter_my:
             j = 0
             while j < counter_all:
-                # print(array_my_plugins[i])
-                # print(all_plugins_list[j][0])
+                print(array_my_plugins[i])
+                print(all_plugins_list[j][0])
                 if (array_my_plugins[i][0] == all_plugins_list[j][0] and array_my_plugins[i][1] != " Demo not started"):
                     array_matched_plugins.append(all_plugins_list[j])
                 j = j + 1
@@ -275,15 +269,32 @@ def by_imported_file(self,type,fname):
 
         #print(type)
         self.tableWidget.setRowCount(0)
-        path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+        path_type = "/Library/Audio/Plug-Ins/Components"
         extension = "\.component"
         if type == "PT":
-            path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio/"
+            path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
             extension = "\.aaxplugin"
 
         if type == "VST":
-            path_type = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
-            extension = "\.dll"
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            path_type = "/Library/Audio/Plug-Ins/VST/Universal Audio/"
+            vst_path_type = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+            vst_path_type[0] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Compressors and Limiters"
+            vst_path_type[1] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Pitch Correction"
+            vst_path_type[2] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Microphone"
+            vst_path_type[3] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Guitar and Bass"
+            vst_path_type[4] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Equalizers"
+            vst_path_type[5] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Special Processing"
+            vst_path_type[6] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Delay and Modulation"
+            vst_path_type[7] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Mastering"
+            vst_path_type[8] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Reverb and Room"
+            vst_path_type[9] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Channel Strip and Preamp"
+            vst_path_type[10] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Tape and Saturation"
+            vst_path_type[11] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Console"
+            vst_path_type[13] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Mono"
+            vst_path_type[12] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Unused"
+
+            extension = "\.vst"
 
         #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
         #        self.tableWidget.move(30, 30)
@@ -317,50 +328,135 @@ def by_imported_file(self,type,fname):
         index = 0
         pattern = '*.txt'
         path = '.'
-        os.chdir(path_type)
-        #print(path_type)
-        #print(root)
-        for i in sorted(glob.glob('UAD*')):
-            # print(i)
-            #temp1 = temp1 + 1
-            if (os.path.join(root, i)):
-                # print(i)
-                i = re.sub(extension, '', i)
-                combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-                if combo_box_options[0] == "Shown":
-                    #print(combo_box_options[0])
-                    #print(i)
-                    combo = QtWidgets.QComboBox();
-                    self.tableWidget.insertRow(self.tableWidget.rowCount())
-                    item = QtWidgets.QTableWidgetItem('UAD')
-                    item.setText(i)
-                    self.tableWidget.setItem(temp1 - 1, 0, item)
-                    #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-                    for t in combo_box_options:
-                        #print(i)
-                        combo.addItem(t)
+        if type == "VST":
+            for k in range(0, 14):
+                if k < 13:
+                    print(vst_path_type[k])
+                    os.chdir(vst_path_type[k])
+                    print(path_type)
+                    print(root)
 
-                    self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
-                    temp1 = temp1 + 1
+                    #print(path_type)
+                    #print(root)
+                    for i in sorted(glob.glob('UAD*')):
+                        print(i)
+                        #temp1 = temp1 + 1
+                        if (os.path.join(root, i)):
+                            # print(i)
+                            i = re.sub(extension, '', i)
+                            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                            if combo_box_options[0] == "Shown":
+                                #print(combo_box_options[0])
+                                #print(i)
+                                combo = QtWidgets.QComboBox();
+                                self.tableWidget.insertRow(self.tableWidget.rowCount())
+                                item = QtWidgets.QTableWidgetItem('UAD')
+                                item.setText(i)
+                                self.tableWidget.setItem(temp1 - 1, 0, item)
+                                #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                                for t in combo_box_options:
+                                    #print(i)
+                                    combo.addItem(t)
+
+                                self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
+                                temp1 = temp1 + 1
+                if k == 13:
+                    print(vst_path_type[k])
+                    os.chdir(vst_path_type[k])
+                    print(path_type)
+                    print(root)
+
+                    # print(path_type)
+                    # print(root)
+                    for i in sorted(glob.glob('UAD*')):
+                        print(i)
+                        # temp1 = temp1 + 1
+                        if (os.path.join(root, i)):
+                            # print(i)
+                            i = re.sub(extension, '', i)
+                            i = i.replace('(m)','')
+                            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                            if combo_box_options[0] == "Shown":
+                                # print(combo_box_options[0])
+                                # print(i)
+                                i = i + "(m)"
+                                combo = QtWidgets.QComboBox();
+                                self.tableWidget.insertRow(self.tableWidget.rowCount())
+                                item = QtWidgets.QTableWidgetItem('UAD')
+                                item.setText(i)
+                                self.tableWidget.setItem(temp1 - 1, 0, item)
+                                # combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                                for t in combo_box_options:
+                                    # print(i)
+                                    combo.addItem(t)
+
+                                self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
+                                temp1 = temp1 + 1
+
+
+        if type != "VST":
+            os.chdir(path_type)
+            print(path_type)
+            print(root)
+            for i in sorted(glob.glob('UAD*')):
+                print(i)
+                # temp1 = temp1 + 1
+                if (os.path.join(root, i)):
+                    # print(i)
+                    i = re.sub(extension, '', i)
+                    combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                    if combo_box_options[0] == "Shown":
+                        # print(combo_box_options[0])
+                        # print(i)
+                        combo = QtWidgets.QComboBox();
+                        self.tableWidget.insertRow(self.tableWidget.rowCount())
+                        item = QtWidgets.QTableWidgetItem('UAD')
+                        item.setText(i)
+                        self.tableWidget.setItem(temp1 - 1, 0, item)
+                        # combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                        for t in combo_box_options:
+                            # print(i)
+                            combo.addItem(t)
+
+                        self.tableWidget.setCellWidget(temp1 - 1, 1, combo)
+                        temp1 = temp1 + 1
+
         logger.info('By_Imported tab Populed')
 
     #Popular Hide
 
         self.tableWidget_hide.setRowCount(0)
-        path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+        path_type = "/Library/Audio/Plug-Ins/Components"
         extension = "\.component"
         if type == "PT":
-            path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+            path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
             extension = "\.aaxplugin"
 
         if type == "VST":
-            path_type = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
-            extension = "\.dll"
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            path_type = "/Library/Audio/Plug-Ins/VST/Universal Audio/"
+            vst_path_type = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+            vst_path_type[0] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Compressors and Limiters/"
+            vst_path_type[1] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Pitch Correction/"
+            vst_path_type[2] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Microphone/"
+            vst_path_type[3] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Guitar and Bass/"
+            vst_path_type[4] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Equalizers/"
+            vst_path_type[5] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Special Processing/"
+            vst_path_type[6] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Delay and Modulation/"
+            vst_path_type[7] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Mastering/"
+            vst_path_type[8] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Reverb and Room/"
+            vst_path_type[9] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Channel Strip and Preamp/"
+            vst_path_type[10] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Tape and Saturation/"
+            vst_path_type[11] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Console/"
+            vst_path_type[13] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Mono/"
+            vst_path_type[12] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Unused/"
+
+            extension = "\.vst"
 
         #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
         #        self.tableWidget.move(30, 30)
         #        self.tableWidget.resize(400, 300)
-        for root, dirs, files in os.walk(path_type):
+        for root, dirs, files in os.walk(path_type, topdown=True):
             files.sort()
             plugins = files
             # logger.info(plugins)
@@ -381,6 +477,8 @@ def by_imported_file(self,type,fname):
         # item2.setBackground(QtGui.QColor(0, 255, 0))
         self.tableWidget_hide.setHorizontalHeaderItem(1, item2)
 
+
+
         self.tabWidget.currentIndex = 1
         combo_box_options = ["Shown", "Hidden"]
         root = path_type
@@ -389,33 +487,146 @@ def by_imported_file(self,type,fname):
         index = 0
         pattern = '*.txt'
         path = '.'
-        os.chdir(path_type)
-        print(path_type)
-        print(root)
-        for i in sorted(glob.glob('UAD*')):
-            # print(i)
-            #temp1 = temp1 + 1
-            if (os.path.join(root, i)):
-                # print(i)
-                i = re.sub(extension, '', i)
-                combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-                if combo_box_options[0] == "Hidden":
-                    print("by_Imported")
-                    print(combo_box_options[0])
-                    print(i)
-                    combo = QtWidgets.QComboBox();
-                    self.tableWidget_hide.insertRow(self.tableWidget_hide.rowCount())
-                    item = QtWidgets.QTableWidgetItem('UAD')
-                    item.setText(i)
-                    self.tableWidget_hide.setItem(temp1 - 1, 0, item)
-                    #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
-                    for t in combo_box_options:
-                        #print(i)
-                        combo.addItem(t)
+        if type == "VST":
+            for k in range(0, 14):
+                if k < 13:
+                    print(vst_path_type[k])
+                    os.chdir(vst_path_type[k])
+                    print(path_type)
+                    print(root)
+                    root = vst_path_type[k]
+                    for i in sorted(glob.glob('UAD*')):
+                        # print(i)
+                        #temp1 = temp1 + 1
+                        if (os.path.join(root, i)):
+                            # print(i)
+                            i = re.sub(extension, '', i)
+                            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                            if combo_box_options[0] == "Hidden":
+                                print("by_Imported")
+                                print(combo_box_options[0])
+                                print(i)
+                                combo = QtWidgets.QComboBox();
+                                self.tableWidget_hide.insertRow(self.tableWidget_hide.rowCount())
+                                item = QtWidgets.QTableWidgetItem('UAD')
+                                item.setText(i)
+                                self.tableWidget_hide.setItem(temp1 - 1, 0, item)
+                                #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                                for t in combo_box_options:
+                                    #print(i)
+                                    combo.addItem(t)
 
-                    self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
-                    temp1 = temp1 + 1
+
+                                self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
+                                plugin_path = QtWidgets.QTableWidgetItem('UAD')
+                                plugin_path.setText(str(k))
+                                self.tableWidget_hide.setItem(temp1 - 1, 2, plugin_path)
+
+                                temp1 = temp1 + 1
+
+                if k == 13:
+                    print(vst_path_type[k])
+                    os.chdir(vst_path_type[k])
+                    print(path_type)
+                    print(root)
+                    root = vst_path_type[k]
+                    for i in sorted(glob.glob('UAD*')):
+                        # print(i)
+                        # temp1 = temp1 + 1
+                        if (os.path.join(root, i)):
+                            # print(i)
+                            i = re.sub(extension, '', i)
+                            i = i.replace('(m)','')
+                            combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                            if combo_box_options[0] == "Hidden":
+                                print("by_Imported")
+                                print(combo_box_options[0])
+                                i = i + "(m)"
+                                print(i)
+                                combo = QtWidgets.QComboBox();
+                                self.tableWidget_hide.insertRow(self.tableWidget_hide.rowCount())
+                                item = QtWidgets.QTableWidgetItem('UAD')
+                                item.setText(i)
+                                self.tableWidget_hide.setItem(temp1 - 1, 0, item)
+                                # combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                                for t in combo_box_options:
+                                    # print(i)
+                                    combo.addItem(t)
+
+                                self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
+                                plugin_path = QtWidgets.QTableWidgetItem('UAD')
+                                plugin_path.setText(str(k))
+                                self.tableWidget_hide.setItem(temp1 - 1, 2, plugin_path)
+
+                                temp1 = temp1 + 1
+
+        if type != "VST":
+            os.chdir(path_type)
+            print(path_type)
+            print(root)
+            for i in sorted(glob.glob('UAD*')):
+                # print(i)
+                #temp1 = temp1 + 1
+                if (os.path.join(root, i)):
+                    # print(i)
+                    i = re.sub(extension, '', i)
+                    combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                    if combo_box_options[0] == "Hidden":
+                        print("by_Imported")
+                        print(combo_box_options[0])
+                        print(i)
+                        combo = QtWidgets.QComboBox();
+                        self.tableWidget_hide.insertRow(self.tableWidget_hide.rowCount())
+                        item = QtWidgets.QTableWidgetItem('UAD')
+                        item.setText(i)
+                        self.tableWidget_hide.setItem(temp1 - 1, 0, item)
+                        #combo_box_options = setcombo(self, combo_box_options, array_matched_plugins, i)
+                        for t in combo_box_options:
+                            #print(i)
+                            combo.addItem(t)
+
+                        self.tableWidget_hide.setCellWidget(temp1 - 1, 1, combo)
+
+
+                        temp1 = temp1 + 1
+
+
         logger.info('By_Imported tab Populed')
+        # print(self.tableWidget_hide.rowCount())
+        # print(self.tableWidget_hide.columnCount())
+        # for y in range(0, 100):
+        #     combo = self.tableWidget_hide.cellWidget(y, 1)
+        #     print(combo.currentText())
+        #     self.tableWidget_hide.setCurrentCell(y, 0)
+        #     curItem = self.tableWidget_hide.currentItem()
+        #     print(curItem.text())
+        #     self.tableWidget_hide.setCurrentCell(y, 2)
+        #     curItem = self.tableWidget_hide.currentItem()
+        #     print(curItem.text())
+
+        # for i in range(0, self.tableWidget_hide.rowCount()):
+        #     combo = self.tableWidget_hide.cellWidget(i, 1)
+        #     print(combo.currentText())
+        #     if (combo.currentText() == "Hidden"):
+        #         self.tableWidget_hide.setCurrentCell(i, 0)
+        #         curItem = self.tableWidget_hide.currentItem()
+        #         print(curItem.text())
+
+
+
+        # self.tableWidget_hide.setCurrentCell(0, 0)
+        # curItem = self.tableWidget_hide.currentItem()
+        # print(curItem.text())
+        #
+        #
+        # item = QtWidgets.QTableWidgetItem('UAD')
+        # item.setText("teste")
+        # self.tableWidget_hide.setItem(0, 1, item)
+        # self.tableWidget_hide.setCurrentCell(0, 1)
+        # curItem = self.tableWidget_hide.currentItem()
+        # print(curItem.text())
+
+
 
 def PopUpVersion_CSV_Update(self,status,path):
 
@@ -521,6 +732,83 @@ def PopUpVersion_CannotConnect(self, status, path):
     self.exPopup.show()
 
 
+def PopUpDonate1(self, text):
+        #name = "\n          Cannot Connect to Server. Please Try Again Later!"
+        name = "\n           Done! Please re-open your DAW and if needed, re-scan you Plugins!\n\n           Contribute if it helped you!"
+        #name = text
+        self.exPopup = examplePopup_help(name)
+        self.exPopup.setGeometry(300, 300, 415, 55)
+        # screen = QDesktopWidget().screenGeometry()
+        # geometry = Dialog.saveGeometry()
+        widget = Dialog.geometry()
+        # x = screen.width() - widget.width()
+        # y = screen.height() - widget.height()
+        y = widget.top() + ((widget.bottom() - widget.top()) / 2) - 50
+        x = widget.left() + ((widget.right() - widget.left()) / 2) - 207
+        # x = widget
+        # y = screen.height() - widget.height()
+        self.exPopup.setGeometry(x, y, 580, 95)
+
+        self.pushButton36 = QtWidgets.QPushButton(name)
+        self.pushButton36.setGeometry(QtCore.QRect(10, 17, 12, 10))
+        self.pushButton36.setObjectName("pushButton")
+        self.pushButton36.setToolTip('Donate')
+        self.pushButton36.clicked.connect(self.on_click_Donate)
+        self.pushButton36.setText("")
+        self.pushButton36.setIcon(QtGui.QIcon(resource_path("donate.jpg")))
+        self.pushButton36.setIconSize(QtCore.QSize(120, 150))
+
+        #self.exPopup
+
+        self.exPopup.setWindowModality(Qt.ApplicationModal)
+        #self.pushButton16.show()
+        self.exPopup.show()
+
+
+def PopUpDonate(self, text):
+    widget = Dialog.geometry()
+    y = widget.top() + ((widget.bottom() - widget.top()) / 2) - 50
+    x = widget.left() + ((widget.right() - widget.left()) / 2) - 257
+
+    self.windowExample = QtWidgets.QWidget()
+    labelA = QtWidgets.QLabel(self.windowExample)
+    labelA.setText('Done!  Please re-open your DAW and if needed, re-scan you Plugins!')
+
+    label_c = QtWidgets.QPushButton(self.windowExample)
+    label_c.setGeometry(QtCore.QRect(10, 467, 120, 30))
+    label_c.setObjectName("pushButton")
+    label_c.setToolTip('Donate')
+    label_c.clicked.connect(self.on_click_Donate)
+    label_c.setText("")
+    label_c.setIcon(QtGui.QIcon(resource_path("donate.jpg")))
+    label_c.setIconSize(QtCore.QSize(120, 150))
+    p = self.windowExample.palette()
+    p.setColor(self.windowExample.backgroundRole(), QtCore.Qt.black)
+    self.windowExample.setPalette(p)
+
+    label_8 = QtWidgets.QLabel(self.windowExample)
+    label_8.setGeometry(QtCore.QRect(130, 473, 630, 16))
+    font = QtGui.QFont()
+    font.setPointSize(13)
+    font.setBold(True)
+    font.setWeight(75)
+    label_8.setFont(font)
+    label_8.setStyleSheet("color: rgb(128, 128, 128);")
+    label_8.setObjectName("label_4")
+    label_8.setText("Contribute if it helped you!")
+
+
+
+    self.windowExample.setWindowTitle('Status')
+    self.windowExample.setGeometry(x, y, 480, 125)
+    self.windowExample.setWindowModality(Qt.ApplicationModal)
+    labelA.move(40, 30)
+    label_c.move(100, 70)
+    label_8.move(220, 75)
+    self.windowExample.show()
+
+
+
 def by_login(self, type, fname):
         with open(resource_path("final.csv"), 'r') as f:
             # reader = csv.reader(f)
@@ -579,7 +867,7 @@ def by_login(self, type, fname):
             extension = "\.aaxplugin"
 
         if type == "VST":
-            path_type = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
             extension = "\.vst"
 
         #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
@@ -651,7 +939,7 @@ def by_login(self, type, fname):
             extension = "\.aaxplugin"
 
         if type == "VST":
-            path_type = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
             extension = "\.vst"
 
         #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
@@ -775,12 +1063,11 @@ def check_version(self,type,fname):
 
     counter = len(array_my_plugins_temp)
     save = 0
-
     i = 0
     array_my_plugins = []
     while i < counter:
 
-        curr_version = "9.10"
+        curr_version = "10.1"
         current_text = str(array_my_plugins_temp[i])
 
         if "UAD Software Release Version" in array_my_plugins_temp[i]:
@@ -808,15 +1095,6 @@ def check_version(self,type,fname):
 
 
 
-def exit_handler(image_path,device):
-    #image_path = self.image_path
-    print("My application is ending!")
-    subprocess.call("'" + image_path + "update.sh' " + "'" + image_path + "'" + " " + device, shell=True)
-    #image_path = "/Users/andre/Downloads/UAD/dist/Hide & Seek UAD Plugins.app/Contents/MacOS/"
-    subprocess.call("hdiutil detach " + device, shell=True)
-    text_execute = "rm -rf '" + image_path + "temp'"
-    subprocess.call(text_execute, shell=True)
-
 
 
 
@@ -824,13 +1102,12 @@ def exit_handler(image_path,device):
 def check_version_sftp(self):
     notconnect = 0
     version = "0"
-    self.image_file = "Hide & Seek UAD Plugins_V2.4.dmg"
     try:
-        #host = "sheepbox.dlinkddnds.com"  # hard-coded
-        host = "192.168.1.80"  # hard-coded
+        host = "sheepbox.dlinkddnds.com"  # hard-coded
+        #host = "192.168.1.80"  # hard-coded
         port = 8443
         transport = paramiko.Transport((host, port))
-        print(host)
+
         password = "uad123"  # hard-coded
         username = "uad"  # hard-coded
         transport.connect(username=username, password=password)
@@ -842,9 +1119,6 @@ def check_version_sftp(self):
 
         sftp.get("/home/uad/final_server.csv", resource_path("final_server.csv"))
         sftp.get("/home/uad/version.txt", resource_path("version.txt"))
-        sftp.get("/home/uad/files/Hide & Seek UAD Plugins_beta.dmg", resource_path(self.image_file))
-
-
 
         sftp.close()
         transport.close()
@@ -853,6 +1127,7 @@ def check_version_sftp(self):
         logger.info('Cannot Connect to Server to Check Version!')
         notconnect = 1
         PopUpVersion_CannotConnect(self, "Close_CSV", "")
+        
 
 
     if notconnect == 0:
@@ -913,23 +1188,6 @@ def check_version_sftp(self):
             logger.info('CSV File Version: ' + current_csv_version)
             PopUpVersion_CSV_Update(self,"NotClose","")
 
-        image_path = resource_path("")
-        self.image_path = resource_path("")
-        #print(image_path)
-        text_execute = "mkdir '" + image_path +   "temp'"
-        #print(text_execute)
-        subprocess.call(text_execute, shell=True)
-
-        text_execute = "hdiutil  attach -nobrowse -noverify '" + image_path + self.image_file + "'  -mountroot '" +  image_path +   "temp'"
-        #print(text_execute)
-        subprocess.call(text_execute, shell=True)
-        self.device = subprocess.check_output("mount | grep 'Hide & Seek UAD Plugins' | cut -d' ' -f 1" , shell=True)
-        self.device = self.device.decode('ascii')
-        #print(device)
-        #subprocess.call("hdiutil detach " + self.device ,shell=True)
-        subprocess.call("chmod +x '" + image_path + "update.sh'", shell=True)
-        #subprocess.call(image_path + "update.sh" ,shell=True)
-        atexit.register(exit_handler,image_path, self.device)
 
 
 
@@ -937,7 +1195,9 @@ def check_version_sftp(self):
 
 
 
-        # print(array_my_plugins[2][1])
+
+
+    # print(array_my_plugins[2][1])
     # print(len(array_my_plugins))
 
     i = 2
@@ -966,15 +1226,15 @@ def showDialog(self):
 
 def popula_hide_tab(self,type,fname):
     self.tableWidget_hide.setRowCount(0)
-    path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+    path_type = "/Library/Audio/Plug-Ins/Unused/Components"
     extension = "\.component"
     if type == "PT":
-        path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+        path_type = "/Library/Application Support/Avid/Audio/Unused"
         extension = "\.aaxplugin"
 
     if type == "VST":
-        path_type = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
-        extension = "\.dll"
+        path_type = "/Library/Audio/Plug-Ins/Unused/VST"
+        extension = "\.vst"
 
     #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
     #        self.tableWidget.move(30, 30)
@@ -1027,15 +1287,15 @@ def popula_hide_tab(self,type,fname):
 
 def popula_branco(self, type):
         self.tableWidget.setRowCount(0)
-        path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+        path_type = "/Library/Audio/Plug-Ins/Components"
         extension = "\.component"
         if type == "PT":
-            path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+            path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
             extension = "\.aaxplugin"
 
         if type == "VST":
-            path_type = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
-            extension = "\.dll"
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            extension = "\.vst"
 
         #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
         #        self.tableWidget.move(30, 30)
@@ -1060,15 +1320,15 @@ def popula_branco(self, type):
 
 def popula_tab(self,type,fname):
         self.tableWidget.setRowCount(0)
-        path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+        path_type = "/Library/Audio/Plug-Ins/Components"
         extension = "\.component"
         if type == "PT":
-            path_type = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+            path_type = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
             extension = "\.aaxplugin"
 
         if type == "VST":
-            path_type = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
-            extension = "\.dll"
+            path_type = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            extension = "\.vst"
 
         #        self.tableWidget = QtWidgets.QTableWidget(5, 2, self)
         #        self.tableWidget.move(30, 30)
@@ -1219,9 +1479,9 @@ def Hide(self, type, fname):
 
     if (self.tabWidget.currentIndex == 0 and type == "VST"):
         logger.info('--Hided VST Plugins--')
-        root = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
+        root = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
         root_backup = "/Library/Audio/Plug-Ins/Unused/VST"
-        root_mono = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins/Mono"
+        root_mono = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/Mono"
         root_mono_backup = "/Library/Audio/Plug-Ins/Unused/VST/Mono"
 
         for i in range(0, self.tableWidget.rowCount()):
@@ -1253,9 +1513,9 @@ def Hide(self, type, fname):
     if (self.tabWidget.currentIndex == 1 and type == "VST"):
 
         root_backup = "/Library/Audio/Plug-Ins/Unused/VST"
-        root = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
+        root = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
         root_mono_backup = "/Library/Audio/Plug-Ins/Unused/VST/Mono"
-        root_mono = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins/Mono"
+        root_mono = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/Mono"
 
         logger.info('--VST AU Plugins--')
         for i in range(0, self.tableWidget_hide.rowCount()):
@@ -1299,7 +1559,7 @@ def Hide_new(self,type,fname):
             logger.info('--Hided AU Plugins--')
             root = "/Library/Audio/Plug-Ins/Components"
             root_backup = "/Library/Audio/Plug-Ins/Unused/Components"
-
+            # Esse está ok na v10
             for i in range(0, self.tableWidget_hide.rowCount()):
                 combo = self.tableWidget_hide.cellWidget(i, 1)
                 print(combo.currentText())
@@ -1316,15 +1576,14 @@ def Hide_new(self,type,fname):
                             # print(sourcefile)
                             # print(destfile)
                             shutil.move(sourcefile, destfile)
-
-
                             logger.info('Hided:  ' + sourcefile + " to " + destfile)
 
         if (type == "PT"):
             logger.info('--Hided ProTools Plugins--')
-            root = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
-            root_backup = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Unused"
+            root = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
+            root_backup = "/Library/Application Support/Avid/Audio/Unused/"
 
+            # Esse está ok na v10
             for i in range(0, self.tableWidget_hide.rowCount()):
                 combo = self.tableWidget_hide.cellWidget(i, 1)
                 print(combo.currentText())
@@ -1340,30 +1599,72 @@ def Hide_new(self,type,fname):
                             destfile = root_backup + "/" + str(file)
                             # print(sourcefile)
                             # print(destfile)
-                            #shutil.move(sourcefile, destfile)
-                            #destfile = sourcefile + '_'
-
-                            os.rename(sourcefile, destfile)
+                            shutil.move(sourcefile, destfile)
                             logger.info('Hided:  ' + sourcefile + " to " + destfile)
 
 
         if (type == "VST"):
             logger.info('--Hided VST Plugins--')
-            root = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
-            root_backup = "C:/Program Files/Steinberg/VSTPlugins/Unused"
-            root_mono = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins/Mono"
-            root_mono_backup = "C:/Program Files/Steinberg/VSTPlugins/Unused/Mono"
+            root = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+            root_backup = "/Library/Audio/Plug-Ins/Unused/VST"
+            root_mono = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/Mono"
+            root_mono_backup = "/Library/Audio/Plug-Ins/Unused/VST/Mono"
+            # /Library/Audio/Plug-Ins/VST/Universal Audio/  monte de diretorios
+
+            vst_path_type = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+            vst_path_type[0] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Compressors and Limiters/"
+            vst_path_type[1] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Pitch Correction/"
+            vst_path_type[2] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Microphone/"
+            vst_path_type[3] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Guitar and Bass/"
+            vst_path_type[4] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Equalizers/"
+            vst_path_type[5] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Special Processing/"
+            vst_path_type[6] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Delay and Modulation/"
+            vst_path_type[7] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Mastering/"
+            vst_path_type[8] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Reverb and Room/"
+            vst_path_type[9] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Channel Strip and Preamp/"
+            vst_path_type[10] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Tape and Saturation/"
+            vst_path_type[11] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Console/"
+            vst_path_type[13] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Mono/"
+            vst_path_type[12] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Unused/"
+            vst_path_type_unused = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+            vst_path_type_unused[0] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Compressors and Limiters"
+            vst_path_type_unused[1] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Pitch Correction"
+            vst_path_type_unused[2] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Microphone"
+            vst_path_type_unused[3] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Guitar and Bass"
+            vst_path_type_unused[4] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Equalizers"
+            vst_path_type_unused[5] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Special Processing"
+            vst_path_type_unused[6] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Delay and Modulation"
+            vst_path_type_unused[7] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Mastering"
+            vst_path_type_unused[8] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Reverb and Room"
+            vst_path_type_unused[9] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Channel Strip and Preamp"
+            vst_path_type_unused[10] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Tape and Saturation"
+            vst_path_type_unused[11] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/UAD Console"
+            vst_path_type_unused[13] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/UAD Mono"
+            vst_path_type_unused[12] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/UAD Unused"
+            for k in range(0, 14):
+                directory = vst_path_type_unused[k]
+                if not os.path.exists(directory):
+                    os.makedirs(directory)
+
 
             for i in range(0, self.tableWidget_hide.rowCount()):
                 combo = self.tableWidget_hide.cellWidget(i, 1)
                 print(combo.currentText())
                 if (combo.currentText() == "Hidden"):
+                    self.tableWidget_hide.setCurrentCell(i, 2)
+                    curItem_path = self.tableWidget_hide.currentItem()
+                    print(curItem_path.text())
                     self.tableWidget_hide.setCurrentCell(i, 0)
                     curItem = self.tableWidget_hide.currentItem()
-                    # print(curItem.text())
+                    print(curItem.text())
+                    root = vst_path_type[int(curItem_path.text())]
+
                     caminho = root + '_' + "\\" + str(curItem.text())
-                    # print(caminho)
+                    print(caminho)
+                    root_backup = vst_path_type_unused[int(curItem_path.text())]
                     for file in os.listdir(root):
+                        print(curItem.text())
+                        print(file)
                         if fnmatch.fnmatch(file, curItem.text() + ".*"):
                             sourcefile = root + "/" + str(file)
                             destfile = root_backup + "/" + str(file)
@@ -1371,14 +1672,17 @@ def Hide_new(self,type,fname):
                             # print(destfile)
                             shutil.move(sourcefile, destfile)
                             logger.info('Hided:  ' + sourcefile + " to " + destfile)
-                    for file in os.listdir(root_mono):
-                        if fnmatch.fnmatch(file, curItem.text() + "(m).*"):
-                            sourcefile = root_mono + "/" + str(file)
-                            destfile = root_mono_backup + "/" + str(file)
-                            # print(sourcefile)
-                            # print(destfile)
-                            shutil.move(sourcefile, destfile)
-                            logger.info('Hided:  ' + sourcefile + " to " + destfile)
+                    # for file in os.listdir(root_mono):
+                    #     print(curItem.text())
+                    #     print(file)
+                    #     print(curItem.text() + "(m).*")
+                    #     if fnmatch.fnmatch(file, curItem.text() + "(m).*"):
+                    #         sourcefile = root_mono + "/" + str(file)
+                    #         destfile = root_mono_backup + "/" + str(file)
+                    #         # print(sourcefile)
+                    #         # print(destfile)
+                    #         shutil.move(sourcefile, destfile)
+                    #         logger.info('Hided:  ' + sourcefile + " to " + destfile)
 
 
         # print(self.tabWidget.currentIndex())
@@ -1395,8 +1699,8 @@ def Reset_all(self, type,fname):
 
     if (type == "PT"):
 
-        root_backup = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Unused"
-        root = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+        root_backup = "/Library/Application Support/Avid/Audio/Unused/"
+        root = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
         logger.info('--Showed AU Plugins--')
         for file in os.listdir(root_backup):
                     if fnmatch.fnmatch(file, "*.*"):
@@ -1404,8 +1708,11 @@ def Reset_all(self, type,fname):
                         destfile = root_backup + "/" + str(file)
                         # print(sourcefile)
                         # print(destfile)
-                        shutil.move(destfile, sourcefile)
-                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
+                        if (exists(sourcefile)):
+                            print("File already on normla folder, maybe new version?")
+                        else:
+                            shutil.move(destfile, sourcefile)
+                            logger.info('Showed:  ' + destfile + " to " + sourcefile)
 
     if (type == "Logic"):
         root_backup = "/Library/Audio/Plug-Ins/Unused/Components"
@@ -1417,34 +1724,73 @@ def Reset_all(self, type,fname):
                         destfile = root_backup + "/" + str(file)
                         # print(sourcefile)
                         # print(destfile)
-                        shutil.move(destfile, sourcefile)
-                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
+                        if (exists(sourcefile)):
+                            print("File already on normla folder, maybe new version?")
+                        else:
+                            shutil.move(destfile, sourcefile)
+                            logger.info('Showed:  ' + destfile + " to " + sourcefile)
 
 
     if (type == "VST"):
 
-        root_backup = "C:/Program Files/Steinberg/VSTPlugins/Unused/"
-        root = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
-        root_mono_backup = "C:/Program Files/Steinberg/VSTPlugins/Unused/Mono"
-        root_mono = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins/Mono"
+        root_backup = "/Library/Audio/Plug-Ins/Unused/VST"
+        root = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
+        root_mono_backup = "/Library/Audio/Plug-Ins/Unused/VST/Mono"
+        root_mono = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/Mono"
+
+        vst_path_type = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+        vst_path_type[0] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Compressors and Limiters/"
+        vst_path_type[1] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Pitch Correction/"
+        vst_path_type[2] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Microphone/"
+        vst_path_type[3] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Guitar and Bass/"
+        vst_path_type[4] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Equalizers/"
+        vst_path_type[5] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Special Processing/"
+        vst_path_type[6] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Delay and Modulation/"
+        vst_path_type[7] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Mastering/"
+        vst_path_type[8] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Reverb and Room/"
+        vst_path_type[9] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Channel Strip and Preamp/"
+        vst_path_type[10] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Tape and Saturation/"
+        vst_path_type[11] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Console/"
+        vst_path_type[13] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Mono/"
+        vst_path_type[12] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Unused/"
+        vst_path_type_unused = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+        vst_path_type_unused[0] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Compressors and Limiters"
+        vst_path_type_unused[1] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Pitch Correction"
+        vst_path_type_unused[2] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Microphone"
+        vst_path_type_unused[3] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Guitar and Bass"
+        vst_path_type_unused[4] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Equalizers"
+        vst_path_type_unused[5] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Special Processing"
+        vst_path_type_unused[6] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Delay and Modulation"
+        vst_path_type_unused[7] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Mastering"
+        vst_path_type_unused[8] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Reverb and Room"
+        vst_path_type_unused[9] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Channel Strip and Preamp"
+        vst_path_type_unused[10] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Tape and Saturation"
+        vst_path_type_unused[11] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/UAD Console"
+        vst_path_type_unused[13] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/UAD Mono"
+        vst_path_type_unused[12] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/UAD Unused"
 
         logger.info('--VST AU Plugins--')
-        for file in os.listdir(root_backup):
-                    if fnmatch.fnmatch(file, "*.*"):
-                        sourcefile = root + "/" + str(file)
-                        destfile = root_backup + "/" + str(file)
-                        # print(sourcefile)
-                        # print(destfile)
-                        shutil.move(destfile, sourcefile)
-                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
-        for file in os.listdir(root_mono_backup):
-                    if fnmatch.fnmatch(file, "*.*"):
-                        sourcefile = root_mono + "/" + str(file)
-                        destfile = root_mono_backup + "/" + str(file)
-                        #print(sourcefile)
-                        #print(destfile)
-                        shutil.move(destfile, sourcefile)
-                        logger.info('Showed:  ' + destfile + " to " + sourcefile)
+        for k in range(0, 14):
+            directory = vst_path_type_unused[k]
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+
+        for k in range(0, 14):
+            root_backup = vst_path_type_unused[k]
+            root = vst_path_type[k]
+
+            for file in os.listdir(root_backup):
+                        if fnmatch.fnmatch(file, "*.*"):
+                            sourcefile = root + "/" + str(file)
+                            destfile = root_backup + "/" + str(file)
+                            # print(sourcefile)
+                            # print(destfile)
+                            if (exists(sourcefile)):
+                                print("File already on normla folder, maybe new version?")
+                            else:
+                                shutil.move(destfile, sourcefile)
+                                logger.info('Showed:  ' + destfile + " to " + sourcefile)
+
 
 
 
@@ -1464,8 +1810,8 @@ def UnHide_all(self, type,fname):
 
     if (type == "PT"):
 
-        root_backup = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio/Unused"
-        root = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Universal Audio"
+        root_backup = "/Library/Application Support/Avid/Audio/Unused/"
+        root = "/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/"
         logger.info('--Showed AU Plugins--')
         for i in range(0, self.tableWidget_hide.rowCount()):
             combo = self.tableWidget_hide.cellWidget(i, 1)
@@ -1486,7 +1832,7 @@ def UnHide_all(self, type,fname):
                         shutil.move(destfile, sourcefile)
                         logger.info('Showed:  ' + destfile + " to " + sourcefile)
 
-    if (type == "Logic1"):
+    if (type == "Logic"):
         root_backup = "/Library/Audio/Plug-Ins/Unused/Components"
         root = "/Library/Audio/Plug-Ins/Components"
         logger.info('--Showed AU Plugins--')
@@ -1514,9 +1860,40 @@ def UnHide_all(self, type,fname):
     if (type == "VST"):
 
         root_backup = "/Library/Audio/Plug-Ins/Unused/VST"
-        root = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins"
+        root = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/"
         root_mono_backup = "/Library/Audio/Plug-Ins/Unused/VST/Mono"
-        root_mono = "C:/Program Files/Steinberg/VSTPlugins/Powered Plugins/Mono"
+        root_mono = "/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/Mono"
+
+        vst_path_type = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+        vst_path_type[0] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Compressors and Limiters/"
+        vst_path_type[1] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Pitch Correction/"
+        vst_path_type[2] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Microphone/"
+        vst_path_type[3] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Guitar and Bass/"
+        vst_path_type[4] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Equalizers/"
+        vst_path_type[5] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Special Processing/"
+        vst_path_type[6] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Delay and Modulation/"
+        vst_path_type[7] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Mastering/"
+        vst_path_type[8] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Reverb and Room/"
+        vst_path_type[9] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Channel Strip and Preamp/"
+        vst_path_type[10] = "/Library/Audio/Plug-Ins/VST/Universal Audio/Tape and Saturation/"
+        vst_path_type[11] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Console/"
+        vst_path_type[13] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Mono/"
+        vst_path_type[12] = "/Library/Audio/Plug-Ins/VST/Universal Audio/UAD Unused/"
+        vst_path_type_unused = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+        vst_path_type_unused[0] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Compressors and Limiters"
+        vst_path_type_unused[1] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Pitch Correction"
+        vst_path_type_unused[2] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Microphone"
+        vst_path_type_unused[3] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Guitar and Bass"
+        vst_path_type_unused[4] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Equalizers"
+        vst_path_type_unused[5] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Special Processing"
+        vst_path_type_unused[6] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Delay and Modulation"
+        vst_path_type_unused[7] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Mastering"
+        vst_path_type_unused[8] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Reverb and Room"
+        vst_path_type_unused[9] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Channel Strip and Preamp"
+        vst_path_type_unused[10] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/Tape and Saturation"
+        vst_path_type_unused[11] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/UAD Console"
+        vst_path_type_unused[13] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/UAD Mono"
+        vst_path_type_unused[12] = "/Library/Audio/Plug-Ins/VST/Unused/Universal Audio/UAD Unused"
 
         logger.info('--VST AU Plugins--')
         for i in range(0, self.tableWidget_hide.rowCount()):
@@ -1556,18 +1933,46 @@ def UnHide_all(self, type,fname):
 
 def popula_all(self,fname,type):
     if type == "imported":
-        popula_tab(self, "PT",fname)
-        popula_hide_tab(self, "PT",fname)
-        #UnHide_all(self, "PT",fname)
+#        popula_tab(self, "VST",fname)
+#        popula_hide_tab(self, "VST",fname)
+#        UnHide_all(self, "VST",fname)
+#        by_imported_file(self, "VST",fname)
+#        popula_tab(self, "PT",fname)
+#        popula_hide_tab(self, "PT",fname)
+#        UnHide_all(self, "PT",fname)
+        Reset_all(self, "PT", fname)
         by_imported_file(self, "PT",fname)
-        popula_tab(self, "VST",fname)
-        popula_hide_tab(self, "VST",fname)
-        #UnHide_all(self, "VST",fname)
-        by_imported_file(self, "VST",fname)
-###        popula_tab(self, "Logic",fname)
-###        popula_hide_tab(self, "Logic",fname)
-        #UnHide_all(self, "Logic",fname)
-###        by_imported_file(self, "Logic",fname)
+#        popula_tab(self, "VST",fname)
+#        popula_hide_tab(self, "VST",fname)
+#        UnHide_all(self, "VST",fname)
+#        by_imported_file(self, "VST",fname)
+#        popula_tab(self, "Logic",fname)
+#        popula_hide_tab(self, "Logic",fname)
+#        UnHide_all(self, "Logic",fname)
+        Reset_all(self, "Logic", fname)
+        by_imported_file(self, "Logic",fname)
+#        popula_tab(self, "VST",fname)
+#        popula_hide_tab(self, "VST",fname)
+#        UnHide_all(self, "VST",fname)
+        Reset_all(self, "VST", fname)
+        by_imported_file(self, "VST", fname)
+
+        self.tableWidget_hide.sortItems(0,order = QtCore.Qt.AscendingOrder)
+        self.tableWidget.sortItems(0,order = QtCore.Qt.AscendingOrder)
+        # self.tableWidget_hide_ordered = self.tableWidget_hide
+        #self.tableWidget_hide_ordered.sortItems(0,order = QtCore.Qt.AscendingOrder)
+        # for i in range(0, self.tableWidget_hide.rowCount()):
+        #     self.tableWidget_hide_ordered.setCurrentCell(i, 0)
+        #     curItem = self.tableWidget_hide_ordered.currentItem()
+        #     print(curItem.text())
+
+
+
+
+
+
+
+
 
     if type == "Login":
         popula_tab(self, "PT", fname)
@@ -1588,7 +1993,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         global logger
         logger = logging.getLogger('myapp')
-        hdlr = logging.FileHandler('c:/temp/myapp.log')
+        hdlr = logging.FileHandler('/var/tmp/myapp.log')
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr.setFormatter(formatter)
         logger.addHandler(hdlr)
@@ -1607,7 +2012,7 @@ class Ui_Dialog(object):
 
         self.currentversion = "2.4"
         self.csv_version = "1.3"
-        self.uad_version = "9.10"
+        self.uad_version = "10"
 
 
         self.tabWidget = QtWidgets.QTabWidget(Dialog)
@@ -1642,14 +2047,14 @@ class Ui_Dialog(object):
         #logger.info(resource_path("uad.jpg"))
         #print(resource_path("uad.jpg"))
 
-        directory = "C:/Program Files/Common Files/Avid/Audio/Plug-Ins/Unused"
+        directory = "/Library/Audio/Plug-Ins/Unused/Components"
         if not os.path.exists(directory):
             os.makedirs(directory)
-        directory = "C:/Program Files/Steinberg/VSTPlugins/Unused"
+        directory = "/Library/Application Support/Avid/Audio/Unused"
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        directory = "C:/Program Files/Steinberg/VSTPlugins/Unused/Mono"
+        directory = "/Library/Audio/Plug-Ins/Unused/VST"
         if not os.path.exists(directory):
             os.makedirs(directory)
 
@@ -1773,7 +2178,7 @@ class Ui_Dialog(object):
         self.tableWidget_hide = QtWidgets.QTableWidget(self.tab_2)
         self.tableWidget_hide.setGeometry(QtCore.QRect(0, 0, 850, 291))
         self.tableWidget_hide.setObjectName("tableWidget1")
-        self.tableWidget_hide.setColumnCount(2)
+        self.tableWidget_hide.setColumnCount(3)
         self.tableWidget_hide.setRowCount(0)
 
         self.radioButton_2.click()
@@ -1804,7 +2209,7 @@ class Ui_Dialog(object):
         self.label_3 = QtWidgets.QLabel(Dialog)
         self.label_3.setGeometry(QtCore.QRect(200, 30, 450, 41))
         font = QtGui.QFont()
-        font.setPointSize(24)
+        font.setPointSize(34)
         font.setBold(True)
         font.setWeight(90)
         self.label_3.setFont(font)
@@ -1812,9 +2217,9 @@ class Ui_Dialog(object):
         self.label_3.setObjectName("label_3")
 
         self.label_7 = QtWidgets.QLabel(Dialog)
-        self.label_7.setGeometry(QtCore.QRect(600, 21, 175, 39))
+        self.label_7.setGeometry(QtCore.QRect(605, 23, 90, 41))
         font = QtGui.QFont()
-        font.setPointSize(8)
+        font.setPointSize(14)
         font.setBold(True)
         font.setWeight(90)
         self.label_7.setFont(font)
@@ -1845,15 +2250,14 @@ class Ui_Dialog(object):
 
 
         self.label_5 = QtWidgets.QLabel(Dialog)
-        self.label_5.setGeometry(QtCore.QRect(650, 470, 600, 20))
+        self.label_5.setGeometry(QtCore.QRect(660, 470, 600, 16))
         font = QtGui.QFont()
-        font.setPointSize(11)
+        font.setPointSize(14)
         font.setBold(True)
-        font.setWeight(65)
+        font.setWeight(75)
         self.label_5.setFont(font)
         self.label_5.setStyleSheet("color: rgb(128, 128, 128);")
         self.label_5.setObjectName("label_4")
-
 
 
 
@@ -1864,7 +2268,7 @@ class Ui_Dialog(object):
         self.pushButton.clicked.connect(self.on_click)
         #self.pushButton.setStyleSheet("background - color: qlineargradient(spread:pad, x1: 0.5, y1: 1, x2: 0.5, y2: 0, stop: 0.350282 rgba(0, 0, 255, 255), stop: 1 rgba(192, 199, 255, 255));")
         self.pushButton.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
-        self.pushButton.hide()
+
 
         self.pushButton_2 = QtWidgets.QPushButton(Dialog)
         self.pushButton_2.setGeometry(QtCore.QRect(715, 49, 135, 35))
@@ -1907,11 +2311,11 @@ class Ui_Dialog(object):
         self.pushButton_8.setText("Check for Updates")
         #self.pushButton_8.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(70, 70, 70), stop:1 rgb(100,103,109));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
         self.pushButton_8.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(21, 123, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
-        self.pushButton_8.hide()
+
 
 
         self.label_4 = QtWidgets.QLabel(Dialog)
-        self.label_4.setGeometry(QtCore.QRect(18, 440, 630, 20))
+        self.label_4.setGeometry(QtCore.QRect(18, 447, 630, 16))
         font = QtGui.QFont()
         font.setPointSize(13)
         font.setBold(True)
@@ -1923,9 +2327,9 @@ class Ui_Dialog(object):
         self.label_8 = QtWidgets.QLabel(Dialog)
         self.label_8.setGeometry(QtCore.QRect(130, 473, 630, 16))
         font = QtGui.QFont()
-        font.setPointSize(10)
+        font.setPointSize(11)
         font.setBold(True)
-        font.setWeight(65)
+        font.setWeight(75)
         self.label_8.setFont(font)
         self.label_8.setStyleSheet("color: rgb(128, 128, 128);")
         self.label_8.setObjectName("label_4")
@@ -1938,7 +2342,7 @@ class Ui_Dialog(object):
         self.radioButton_3.clicked.connect(self.radio_VST_click)
 
         self.pushButton6 = QtWidgets.QPushButton(Dialog)
-        self.pushButton6.setGeometry(QtCore.QRect(10, 466, 120, 30))
+        self.pushButton6.setGeometry(QtCore.QRect(10, 467, 120, 30))
         self.pushButton6.setObjectName("pushButton")
         self.pushButton6.setToolTip('Donate')
         self.pushButton6.clicked.connect(self.on_click_Donate)
@@ -1972,6 +2376,8 @@ class Ui_Dialog(object):
 
 
 
+
+
     def showdialog():
         d = QDialog()
         b1 = QPushButton("ok", d)
@@ -1989,7 +2395,7 @@ class Ui_Dialog(object):
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("Dialog", "    By UAD Login    "))
         #self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Dialog", "By UADSystemProfile "))
         self.label_3.setText(_translate("Dialog", "Hide & Seek UAD Plugins"))
-        self.label_7.setText(_translate("Dialog", "V2.4b for Windows (UAD V9.10)"))
+        self.label_7.setText(_translate("Dialog", "V2.5  (10.1)"))
 
         #self.label_9.setText(_translate("Dialog", "UAD User"))
         #self.label_10.setText(_translate("Dialog", "Password"))
@@ -2007,8 +2413,9 @@ class Ui_Dialog(object):
         self.radioButton_2.setText(_translate("Dialog", "Logic - AU"))
         self.radioButton.setText(_translate("Dialog", "ProTools - AAX"))
         self.radioButton_3.setText(_translate("Dialog", "Others - VST"))
-        self.label_5.setText(_translate("Dialog", "Logs at c:/temp/myapp.log"))
+        self.label_5.setText(_translate("Dialog", "Logs at /var/tmp/myapp.log"))
         #self.label_5.setText("sdf")
+
 
 
 
@@ -2017,19 +2424,17 @@ class Ui_Dialog(object):
         temp = 0
         if os.path.exists('/Library/Audio/Plug-Ins/Components/'):
             result =  backupToZip('/Library/Audio/Plug-Ins/Components/',"Component")
-        if os.path.exists('C:/Program Files/Steinberg/VSTPlugins/Powered Plugins/'):
-            result1 = backupToZip('C:/Program Files/Steinberg/VSTPlugins/Powered Plugins/',"VST")
-        if os.path.exists('C:/Program Files/Steinberg/VSTPlugins/Powered Plugins/'):
+        if os.path.exists('/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/'):
+            result1 = backupToZip('/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/',"VST")
+        if os.path.exists('/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/'):
             result2 = backupToZip('/Library/Application Support/Avid/Audio/Plug-Ins/Universal Audio/', "aax")
-        if os.path.exists('C:/Program Files/Steinberg/VSTPlugins/Powered Plugins/'):
+        if os.path.exists('/Library/Audio/Plug-Ins/VST/Powered Plug-Ins/'):
             result3 = backupToZip('/Library/Application Support/Digidesign/Plug-Ins/Universal Audio/', "dpm")
 
         self.label_4.setText('Backup done in folder /Users/ ! ' )
 
     def on_click_openfile(self):
-        self.pushButton_2.setStyleSheet("color: rgb(255,255,255);" "background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0.150282 rgb(100, 0, 255), stop:1 rgb(118,183,249));" "border-style: solid;" "border-color: rgb(70, 70, 70) ;" "border-width: 0px;" "border-radius: 7px;")
         #fname = QFileDialog.getOpenFileName()
-
         fname = ""
         dir = sys.argv[1]
         filters = "Text files (*.txt);;UAD File (*.txt)"
@@ -2038,7 +2443,7 @@ class Ui_Dialog(object):
         fname = QFileDialog.getOpenFileName(Dialog, " File dialog ", dir, filters, selected_filter)
         if fname[0] != "":
             result_format = check_fileformat(self, type, fname)
-            print("adsd")
+            #print("adsd")
             print(result_format)
             if result_format == 1:
                 self.PopUpFileFormat()
@@ -2058,7 +2463,7 @@ class Ui_Dialog(object):
         fname = "reset"
         Reset_all(self, "PT",fname)
         Reset_all(self, "VST",fname)
-        #Reset_all(self, "Logic",fname)
+        Reset_all(self, "Logic",fname)
         self.label_4.setText("Reset OK! All Plugins Back. ")
 
 
@@ -2099,17 +2504,18 @@ class Ui_Dialog(object):
     def on_click_Apply(self,fname):
             if self.radioButton.isChecked():
                 type = "PT"
-
-
             if self.radioButton_2.isChecked():
                 type = "Logic"
             if self.radioButton_3.isChecked():
                 type = "VST"
 
-            #Hide_new(self,"Logic",fname)
+            Hide_new(self, "VST", fname)
+            Hide_new(self,"Logic",fname)
             Hide_new(self,"PT",fname)
-            Hide_new(self,"VST",fname)
+            #Hide_new(self,"VST",fname)
             self.label_4.setText("Done! Please re-open your DAW and if needed, re-scan you Plugins! ")
+            text = "Done! Please re-open your DAW and if needed, re-scan you Plugins!"
+            PopUpDonate(self, text)
 
 
 
@@ -2118,8 +2524,7 @@ class Ui_Dialog(object):
 
     def PopUpVersion(self):
 
-
-        name = "\n   This App was Designed to work with UAD Software Version 9.10\n   Please wait for new release.\n   You can contact Daniel (dcarneiro@hotmail.com) about it.\n   Program will close."
+        name = "\n   This App was Designed to work with UAD Software Version 10.1\n   Please wait for new release.\n   You can contact Daniel (dcarneiro@hotmail.com) about it.\n   Program will close."
         self.exPopup = examplePopup(name)
         self.exPopup.setGeometry(500, 300, 415, 55)
         screen = QDesktopWidget().screenGeometry()
@@ -2208,8 +2613,6 @@ class Ui_Dialog(object):
         url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8QLLW4HLB433J'
         if sys.platform == 'darwin':  # in case of OS X
             subprocess.Popen(['open', url])
-        if sys.platform == 'win32':
-            os.startfile(url)
 
     def location_on_the_screen(self):
         screen = QDesktopWidget().screenGeometry()
@@ -2232,6 +2635,7 @@ class examplePopup(QWidget):
         self.initUI1()
         self.setGeometry(700, 120, 100, 100)
         self.resize(867, 500)
+
 
 
 
@@ -2290,42 +2694,29 @@ if __name__ == '__main__':
                sys.exit(exit_code)
 
     #print(resource_path("main"))
-    if (len(sys.argv) > 1 and is_admin()):
+
+    logger1 = logging.getLogger('myapp')
+    hdlr1 = logging.FileHandler('/var/tmp/myapp.log')
+    formatter1 = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    hdlr1.setFormatter(formatter1)
+    logger1.addHandler(hdlr1)
+    logger1.setLevel(logging.INFO)
+    logger1.info('Path Original')
+    logger1.info(sys.argv[1])
+
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(Dialog)
+    ui.location_on_the_screen()
+    Dialog.show()
 
 
-        # Code of your program here
-
-        newpath = r'C:/temp1'
-        if not os.path.exists(newpath):
-            os.makedirs(newpath)
-        logger1 = logging.getLogger('myapp')
-        hdlr1 = logging.FileHandler('C:/temp/myapp.log')
-        formatter1 = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        hdlr1.setFormatter(formatter1)
-        logger1.addHandler(hdlr1)
-        logger1.setLevel(logging.INFO)
-        logger1.info('Path Original')
-        print(sys.argv[1])
-        logger1.info(sys.argv[1])
-
-        app = QtWidgets.QApplication(sys.argv)
-        Dialog = QtWidgets.QDialog()
-        ui = Ui_Dialog()
-        ui.setupUi(Dialog)
-        ui.location_on_the_screen()
-        Dialog.show()
-
-
-        sys.exit(app.exec_())
-
-    else:
-        # Re-run the program with admin rights
-        print (sys.argv[0])
-        argument = sys.argv[0]
-        argument = argument + " /"
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, argument , None, 1)
-
+    sys.exit(app.exec_())
 
 
 #     build
 #     rm -rf ./build; rm -rf ./dist/; pyinstaller --onedir --windowed --icon=HideSeek.icns main.py; cp uad.jpg ./dist/main.app/Contents/MacOS/; cp donate.jpg ./dist/main.app/Contents/MacOS/; cp current_version.txt ./dist/main.app/Contents/MacOS/ ;cp final.csv ./dist/main.app/Contents/MacOS/; mv ./dist/main.app/ ./dist/Hide\ \&\ Seek\ UAD\ Plugins.app/
+
+
+
